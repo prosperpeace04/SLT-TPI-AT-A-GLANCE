@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ND2 Report Books — SLT Underground</title>
+  <style>
+/* ============================================================
+   SLT UNDERGROUND — SHARED STYLESHEET
+   Colors: Burnt Orange #E8650A | Deep Black #080808 | Off White #F0EDE6
+   Fonts: Syne (display) | Space Mono (mono) | DM Sans (body)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --orange: #E8650A;
+  --orange-light: #FF7A1A;
+  --orange-dark: #C4500A;
+  --black: #080808;
+  --black-mid: #111111;
+  --black-card: #161616;
+  --black-border: #222222;
+  --white: #F0EDE6;
+  --white-dim: #B8B5AF;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  --nav-width: 300px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
+
+/* ── SELECTION ── */
+::selection { background: var(--orange); color: var(--black); }
+
+/* ── LINKS ── */
+a { color: inherit; text-decoration: none; }
+
+/* ══════════════════════════════════════════
+   NAV OVERLAY
+══════════════════════════════════════════ */
+.nav-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(8,8,8,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+.nav-overlay.active { opacity: 1; pointer-events: all; }
+
+/* ══════════════════════════════════════════
+   SIDE NAVIGATION
+══════════════════════════════════════════ */
+.side-nav {
+  position: fixed;
+  top: 0; left: calc(-1 * var(--nav-width));
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--black-mid);
+  border-right: 1px solid var(--black-border);
+  z-index: 999;
+  transition: left var(--transition);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.side-nav.open { left: 0; }
+
+.nav-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--black-border);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--orange);
+  letter-spacing: -0.02em;
+}
+.nav-logo span { color: var(--white); }
+
+.nav-close {
+  position: absolute;
+  top: 18px; right: 16px;
+  background: none;
+  border: none;
+  color: var(--white-dim);
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color var(--transition);
+}
+.nav-close:hover { color: var(--orange); }
+
+.nav-list {
+  list-style: none;
+  padding: 12px 0;
+  flex: 1;
+}
+.nav-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.88rem;
+  color: var(--white-dim);
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 0.01em;
+}
+.nav-link:hover, .nav-link.active { color: var(--white); background: rgba(232,101,10,0.08); }
+.nav-link .nav-icon { font-size: 1rem; margin-right: 10px; }
+.nav-link .nav-arrow { font-size: 0.75rem; transition: transform var(--transition); }
+.nav-link.expanded .nav-arrow { transform: rotate(90deg); }
+
+.badge-new {
+  background: var(--orange);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  margin-left: 6px;
+}
+
+.sub-nav {
+  display: none;
+  list-style: none;
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.sub-nav.open { display: block; }
+.sub-nav-link {
+  display: block;
+  padding: 10px 20px 10px 44px;
+  font-size: 0.82rem;
+  color: var(--white-dim);
+  cursor: pointer;
+  transition: all var(--transition);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.sub-nav-link:hover { color: var(--orange); background: rgba(232,101,10,0.05); }
+
+.nav-section-label {
+  padding: 14px 20px 6px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: rgba(240,237,230,0.3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.nav-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--black-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--black);
+  flex-shrink: 0;
+}
+.nav-founder-info p {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--white);
+  line-height: 1.2;
+}
+.nav-founder-info span {
+  font-size: 0.72rem;
+  color: var(--white-dim);
+}
+
+/* ══════════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════════ */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8,8,8,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--black-border);
+}
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: all var(--transition);
+}
+.hamburger:hover span { background: var(--orange); }
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--orange);
+  letter-spacing: -0.02em;
+}
+.topbar-logo span { color: var(--white); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topbar-ai-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--orange);
+  color: var(--black);
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.topbar-ai-btn:hover {
+  background: var(--orange-light);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════════
+   PAGE WRAPPER
+══════════════════════════════════════════ */
+.page-content {
+  padding-top: 60px;
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════
+   HERO SECTION (Homepage)
+══════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(160deg, #E8650A 0%, #C4500A 35%, #080808 65%);
+}
+.hero-dna {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0.07;
+  background-image:
+    radial-gradient(circle, var(--white) 1px, transparent 1px),
+    radial-gradient(circle, var(--white) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 60px 24px 80px;
+  max-width: 700px;
+}
+.hero-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(240,237,230,0.7);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  border: 1px solid rgba(240,237,230,0.2);
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 8vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--black);
+  background: var(--white);
+  padding: 0 8px;
+  border-radius: 4px;
+}
+.hero p {
+  font-size: 1rem;
+  color: rgba(240,237,230,0.85);
+  max-width: 500px;
+  margin-bottom: 32px;
+  line-height: 1.75;
+}
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  color: var(--black);
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.btn-primary:hover { background: var(--orange); color: var(--white); transform: translateY(-2px); }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--white);
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid rgba(240,237,230,0.3);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+
+/* Wave divider */
+.wave-divider {
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  line-height: 0;
+}
+.wave-divider svg { display: block; width: 100%; }
+
+/* ══════════════════════════════════════════
+   SECTION STYLES
+══════════════════════════════════════════ */
+.section { padding: 60px 24px; }
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5vw, 2.4rem);
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 14px;
+  line-height: 1.15;
+}
+.section-sub {
+  color: var(--white-dim);
+  font-size: 0.92rem;
+  max-width: 520px;
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════
+   CARDS GRID
+══════════════════════════════════════════ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 12px;
+  padding: 20px 16px;
+  transition: all var(--transition);
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+.card:hover {
+  border-color: var(--orange);
+  transform: translateY(-3px);
+  background: rgba(232,101,10,0.06);
+}
+.card-icon {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  display: block;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--white);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.card-sub {
+  font-size: 0.76rem;
+  color: var(--white-dim);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════
+   NOTE CONTENT
+══════════════════════════════════════════ */
+.note-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.note-block {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  margin-bottom: 24px;
+}
+.note-block h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--orange);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--black-border);
+}
+.note-block h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+  margin: 20px 0 10px;
+}
+.note-block p {
+  color: var(--white-dim);
+  font-size: 0.9rem;
+  line-height: 1.85;
+  margin-bottom: 12px;
+}
+.note-block ul, .note-block ol {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+.note-block li {
+  color: var(--white-dim);
+  font-size: 0.88rem;
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+.note-block strong { color: var(--white); font-weight: 600; }
+.note-block .formula {
+  background: rgba(232,101,10,0.08);
+  border-left: 3px solid var(--orange);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--orange-light);
+  margin: 12px 0;
+  overflow-x: auto;
+}
+
+/* ══════════════════════════════════════════
+   TABLE STYLE
+══════════════════════════════════════════ */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+  margin: 16px 0;
+}
+.data-table th {
+  background: rgba(232,101,10,0.15);
+  color: var(--orange);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--black-border);
+}
+.data-table td {
+  padding: 9px 12px;
+  color: var(--white-dim);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.data-table tr:hover td { background: rgba(232,101,10,0.04); color: var(--white); }
+
+/* ══════════════════════════════════════════
+   PAGE HEADER (inner pages)
+══════════════════════════════════════════ */
+.page-header {
+  padding: 50px 24px 36px;
+  background: linear-gradient(160deg, rgba(232,101,10,0.15) 0%, transparent 70%);
+  border-bottom: 1px solid var(--black-border);
+  position: relative;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(232,101,10,0.07) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+}
+.page-header .section-label { margin-bottom: 8px; }
+.page-header h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 6vw, 2.6rem);
+  letter-spacing: -0.03em;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header p {
+  font-size: 0.9rem;
+  color: var(--white-dim);
+  max-width: 500px;
+}
+
+/* ══════════════════════════════════════════
+   SEARCH BAR
+══════════════════════════════════════════ */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 24px 24px 0;
+  transition: border-color var(--transition);
+}
+.search-bar:focus-within { border-color: var(--orange); }
+.search-bar input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+.search-bar input::placeholder { color: var(--white-dim); }
+.search-bar .search-icon { color: var(--white-dim); font-size: 1rem; }
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 24px 0;
+}
+.filter-btn {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  color: var(--white-dim);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-body);
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--black);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════
+   PROSPER AI
+══════════════════════════════════════════ */
+.ai-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 0 20px;
+  border-bottom: 1px solid var(--black-border);
+  margin-bottom: 24px;
+}
+.ai-logo {
+  width: 48px; height: 48px;
+  background: var(--orange);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.ai-logo::after {
+  content: 'P';
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--black);
+}
+.ai-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--orange);
+}
+.ai-tagline {
+  font-size: 0.78rem;
+  color: var(--white-dim);
+  font-family: var(--font-mono);
+}
+.ai-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.mode-chip {
+  background: rgba(232,101,10,0.1);
+  border: 1px solid rgba(232,101,10,0.3);
+  color: var(--orange);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.mode-chip:hover, .mode-chip.active {
+  background: var(--orange);
+  color: var(--black);
+}
+.chat-window {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 16px;
+  padding: 20px;
+  min-height: 320px;
+  max-height: 480px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.chat-msg {
+  display: flex;
+  gap: 10px;
+  animation: fadeUp 0.3s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.chat-msg.user { flex-direction: row-reverse; }
+.msg-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--black);
+  flex-shrink: 0;
+}
+.msg-avatar.ai {
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  font-family: var(--font-display);
+}
+.msg-bubble {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--black-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 0.87rem;
+  color: var(--white);
+  line-height: 1.7;
+  max-width: 80%;
+}
+.chat-msg.user .msg-bubble {
+  background: rgba(232,101,10,0.12);
+  border-color: rgba(232,101,10,0.2);
+}
+.chat-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.chat-input {
+  flex: 1;
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  resize: none;
+  outline: none;
+  min-height: 50px;
+  max-height: 120px;
+  transition: border-color var(--transition);
+}
+.chat-input:focus { border-color: var(--orange); }
+.chat-input::placeholder { color: var(--white-dim); }
+.chat-send {
+  background: var(--orange);
+  border: none;
+  border-radius: 10px;
+  width: 48px; height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--black);
+  font-size: 1.1rem;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.chat-send:hover { background: var(--orange-light); transform: scale(1.05); }
+.chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ══════════════════════════════════════════
+   GP CALCULATOR
+══════════════════════════════════════════ */
+.gp-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.gp-card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.gp-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.gp-input {
+  background: var(--black);
+  border: 1px solid var(--black-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color var(--transition);
+  width: 100%;
+}
+.gp-input:focus { border-color: var(--orange); }
+.gp-input option { background: var(--black-mid); }
+.gp-result {
+  background: linear-gradient(135deg, rgba(232,101,10,0.15), rgba(232,101,10,0.05));
+  border: 1px solid rgba(232,101,10,0.25);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+.gp-result .gpa-value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 3rem;
+  color: var(--orange);
+  letter-spacing: -0.05em;
+}
+.gp-result .class-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  margin-top: 6px;
+}
+
+/* ══════════════════════════════════════════
+   ABOUT PAGE
+══════════════════════════════════════════ */
+.about-card {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.founder-profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.founder-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--black);
+  flex-shrink: 0;
+  border: 3px solid var(--orange);
+}
+.founder-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.founder-role {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  color: var(--orange);
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+.founder-bio { font-size: 0.88rem; color: var(--white-dim); line-height: 1.75; }
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--black);
+  border: 1px solid var(--black-border);
+  color: var(--white-dim);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.social-link:hover { border-color: var(--orange); color: var(--orange); }
+
+/* ══════════════════════════════════════════
+   TIMETABLE PAGE
+══════════════════════════════════════════ */
+.timetable-wrapper {
+  padding: 24px;
+  overflow-x: auto;
+}
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  min-width: 600px;
+}
+.timetable th {
+  background: var(--orange);
+  color: var(--black);
+  padding: 10px 8px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-align: center;
+  font-size: 0.7rem;
+}
+.timetable td {
+  border: 1px solid var(--black-border);
+  padding: 8px;
+  vertical-align: top;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--white-dim);
+  background: var(--black-card);
+  line-height: 1.4;
+}
+.timetable td.day-col {
+  background: rgba(232,101,10,0.1);
+  color: var(--orange);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+.timetable td.has-class {
+  background: rgba(232,101,10,0.08);
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+.site-footer {
+  background: var(--black-mid);
+  border-top: 1px solid var(--black-border);
+  padding: 40px 24px 24px;
+  margin-top: 60px;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+.footer-tagline {
+  font-size: 0.83rem;
+  color: var(--white-dim);
+  margin-bottom: 24px;
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.footer-link {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  transition: color var(--transition);
+  text-decoration: none;
+}
+.footer-link:hover { color: var(--orange); }
+.footer-bottom {
+  border-top: 1px solid var(--black-border);
+  padding-top: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(240,237,230,0.3);
+}
+.footer-bottom span { color: var(--orange); }
+
+/* ══════════════════════════════════════════
+   ALERT / NOTICE
+══════════════════════════════════════════ */
+.notice {
+  background: rgba(232,101,10,0.08);
+  border: 1px solid rgba(232,101,10,0.25);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 0 24px 24px;
+  font-size: 0.85rem;
+  color: var(--white-dim);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.notice .notice-icon { color: var(--orange); font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ══════════════════════════════════════════
+   TABS
+══════════════════════════════════════════ */
+.tab-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--black-border);
+  padding: 0 24px;
+  overflow-x: auto;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--white-dim);
+  padding: 14px 18px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+.tab-btn:hover { color: var(--white); }
+.tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+.tab-panel { display: none; padding: 24px; }
+.tab-panel.active { display: block; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .hero-content { padding: 50px 20px 70px; }
+  .section { padding: 40px 20px; }
+  .cards-grid { grid-template-columns: 1fr 1fr; }
+  .founder-profile { flex-direction: column; align-items: center; text-align: center; }
+  .gp-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ══════════════════════════════════════════
+   LOADING SPINNER
+══════════════════════════════════════════ */
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(240,237,230,0.2);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════════
+   REPORT BOOK EXPERIMENT CARD
+══════════════════════════════════════════ */
+.exp-card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 14px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.exp-card-header {
+  background: rgba(232,101,10,0.1);
+  border-bottom: 1px solid var(--black-border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.exp-card-header h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+}
+.exp-card-header .exp-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--orange);
+  margin-bottom: 2px;
+}
+.exp-toggle { color: var(--orange); font-size: 1rem; transition: transform var(--transition); }
+.exp-toggle.open { transform: rotate(180deg); }
+.exp-body { padding: 20px; display: none; }
+.exp-body.open { display: block; }
+.exp-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--orange);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+.exp-label:first-child { margin-top: 0; }
+.exp-body p { font-size: 0.87rem; color: var(--white-dim); line-height: 1.8; margin-bottom: 8px; }
+.exp-body ul { padding-left: 18px; }
+.exp-body li { font-size: 0.87rem; color: var(--white-dim); line-height: 1.8; margin-bottom: 4px; }
+
+/* Print button */
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--black);
+  border: 1px solid var(--black-border);
+  color: var(--white-dim);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-body);
+  margin-top: 12px;
+}
+.print-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+</style>
+</head>
+<body>
+<div id="nav-inject"></div>
+<main class="page-content">
+
+  <div class="page-header">
+    <div class="section-label">Laboratory Resources</div>
+    <h1>ND2 Report Books 🔬</h1>
+    <p>Second semester lab report book templates for Biochemistry, Genetics and Ecology. Expand each experiment to view the full report structure.</p>
+  </div>
+
+  <div class="notice" style="margin:24px 24px 0">
+    <span class="notice-icon">💡</span>
+    <span>These are <strong>report book templates</strong>. Each experiment shows the standard format: Aim, Introduction, Materials & Methods, Results, Discussion, Conclusion. Fill in your actual experimental observations and results.</span>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-section">
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="biochem">Biochemistry — STC 222</button>
+      <button class="tab-btn" data-tab="genetics">Genetics — STB 221</button>
+      <button class="tab-btn" data-tab="ecology">Ecology — STB 222</button>
+    </nav>
+
+    <!-- ══ BIOCHEMISTRY ══ -->
+    <div class="tab-panel active" data-panel="biochem">
+      <div style="padding:24px 24px 0">
+        <div class="section-label">STC 222 — Biochemistry</div>
+        <p class="section-sub">Laboratory practicals for Biochemistry, ND2 Second Semester.</p>
+      </div>
+
+      <!-- EXPERIMENT 1 -->
+      <div style="padding:0 24px">
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 1</div>
+              <h3>Qualitative Tests for Carbohydrates</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To carry out qualitative tests for the identification of carbohydrates (reducing sugars, non-reducing sugars, starch and polysaccharides) using standard chemical tests.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>Carbohydrates are the most abundant biomolecules on earth. They serve as energy sources, structural components, and are involved in cell recognition. Qualitative tests such as Benedict's test, Fehling's test, Iodine test and Molisch's test are used to identify the presence and type of carbohydrates in a sample.</p>
+            <p><strong>Benedict's Test:</strong> Used to detect reducing sugars. Reducing sugars (glucose, maltose, lactose) contain free aldehyde or ketone groups that can donate electrons to Cu²⁺ in Benedict's reagent, reducing it to Cu₂O (brick-red precipitate).</p>
+            <p><strong>Iodine Test:</strong> Used to detect starch. Iodine forms a dark blue-black complex with starch (amylose component). The colour disappears on heating and reappears on cooling.</p>
+            <p><strong>Molisch's Test:</strong> A general test for carbohydrates. Concentrated H₂SO₄ dehydrates carbohydrates to form furfural (from pentoses) or hydroxymethylfurfural (from hexoses), which reacts with α-naphthol to form a purple ring at the interface.</p>
+
+            <div class="exp-label">Materials and Apparatus</div>
+            <ul>
+              <li>Test tubes and test tube rack</li>
+              <li>Water bath</li>
+              <li>Benedict's reagent, Fehling's solution A and B</li>
+              <li>Iodine solution (potassium iodide/iodine)</li>
+              <li>Molisch's reagent (α-naphthol in ethanol)</li>
+              <li>Concentrated sulphuric acid</li>
+              <li>Dropper and pipette</li>
+              <li>Known carbohydrate solutions: glucose, sucrose, starch, lactose</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p><strong>Benedict's Test:</strong> Add 2 cm³ of Benedict's reagent to 1 cm³ of test solution. Heat in water bath for 5 minutes. Observe for colour change. A brick-red precipitate indicates a reducing sugar.</p>
+            <p><strong>Iodine Test:</strong> Add 2–3 drops of iodine solution to 2 cm³ of test solution. Observe for blue-black colour indicating starch.</p>
+            <p><strong>Molisch's Test:</strong> Add 2 drops of Molisch's reagent to 2 cm³ of test solution. Mix gently. Carefully add 2 cm³ of concentrated H₂SO₄ down the side of the tube. Observe for purple ring at the interface, indicating a carbohydrate.</p>
+
+            <div class="exp-label">Results Table</div>
+            <table class="data-table">
+              <thead><tr><th>Test</th><th>Reagent</th><th>Observation</th><th>Inference</th></tr></thead>
+              <tbody>
+                <tr><td>Benedict's</td><td>Benedict's reagent + heat</td><td>Brick-red precipitate / No change</td><td>Reducing sugar present / Absent</td></tr>
+                <tr><td>Iodine</td><td>Iodine solution</td><td>Blue-black colour / No change</td><td>Starch present / Absent</td></tr>
+                <tr><td>Molisch's</td><td>α-naphthol + conc. H₂SO₄</td><td>Purple ring at interface</td><td>Carbohydrate present</td></tr>
+              </tbody>
+            </table>
+
+            <div class="exp-label">Discussion</div>
+            <p>Describe and explain all observations. Discuss the chemical basis of each positive reaction. Account for any negative results. Compare results for different carbohydrate samples tested.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>Summarize what carbohydrates were identified in each sample. State whether the aim of the experiment was achieved.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+
+        <!-- EXPERIMENT 2 -->
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 2</div>
+              <h3>Qualitative Tests for Proteins</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To carry out qualitative tests for the identification and characterization of proteins using Biuret test, Ninhydrin test, and Millon's test.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>Proteins are complex nitrogenous compounds made of amino acids linked by peptide bonds. They serve as enzymes, structural proteins, transport proteins, antibodies and hormones.</p>
+            <p><strong>Biuret Test:</strong> Used to detect the presence of peptide bonds (-CO-NH-) in proteins. In alkaline solution, copper ions form a violet/purple complex with two or more peptide bonds.</p>
+            <p><strong>Ninhydrin Test:</strong> Ninhydrin reacts with α-amino acids to produce a purple-blue colour (Ruhemann's purple). Proline and hydroxyproline give a yellow colour instead.</p>
+            <p><strong>Millon's Test:</strong> Used to detect proteins containing tyrosine (a phenolic amino acid). Millon's reagent (mercuric nitrate in nitric acid) reacts with phenolic compounds to form a red precipitate.</p>
+            <p><strong>Xanthoproteic Test:</strong> Concentrated HNO₃ nitrates aromatic amino acids (phenylalanine, tryptophan, tyrosine) to produce a yellow colour that turns orange-yellow in alkali.</p>
+
+            <div class="exp-label">Materials and Apparatus</div>
+            <ul>
+              <li>Test tubes, test tube rack, water bath</li>
+              <li>Biuret reagent (NaOH + CuSO₄)</li>
+              <li>Ninhydrin solution (0.2% in acetone or ethanol)</li>
+              <li>Millon's reagent</li>
+              <li>Concentrated nitric acid and sodium hydroxide</li>
+              <li>Protein solutions: albumin (egg white), gelatin, casein</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p><strong>Biuret Test:</strong> Add 1 cm³ of 10% NaOH to 2 cm³ of protein solution. Add 2–3 drops of 1% CuSO₄ solution. Mix well. Observe colour — violet/purple indicates peptide bonds (protein present).</p>
+            <p><strong>Ninhydrin Test:</strong> Add 3 drops of ninhydrin solution to 1 cm³ of protein solution. Heat in water bath for 5 minutes. Purple-blue colour indicates amino acids or proteins.</p>
+            <p><strong>Xanthoproteic Test:</strong> Add 1 cm³ of concentrated HNO₃ to 1 cm³ of protein solution. Heat gently. Cool. Add dilute NaOH. Yellow turning orange-yellow indicates aromatic amino acids.</p>
+
+            <div class="exp-label">Results Table</div>
+            <table class="data-table">
+              <thead><tr><th>Test</th><th>Reagent</th><th>Observation</th><th>Inference</th></tr></thead>
+              <tbody>
+                <tr><td>Biuret</td><td>NaOH + CuSO₄</td><td>Violet/purple colour</td><td>Peptide bonds / protein present</td></tr>
+                <tr><td>Ninhydrin</td><td>Ninhydrin + heat</td><td>Purple-blue colour</td><td>Amino acids present</td></tr>
+                <tr><td>Xanthoproteic</td><td>Conc. HNO₃ + NaOH</td><td>Yellow → orange-yellow</td><td>Aromatic amino acids present</td></tr>
+              </tbody>
+            </table>
+
+            <div class="exp-label">Discussion</div>
+            <p>Explain the chemical basis of each positive reaction. Discuss which amino acids are detected by each test. Relate the results to the protein samples tested.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>State which tests gave positive results for each protein sample. Confirm whether the aim was achieved.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+
+        <!-- EXPERIMENT 3 -->
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 3</div>
+              <h3>Qualitative Tests for Lipids</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To carry out qualitative tests for the identification of lipids using the emulsification test, solubility test, and Sudan III / Sudan IV staining.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>Lipids are a diverse group of hydrophobic biomolecules including fats, oils, phospholipids, steroids and waxes. They serve as energy reserves, membrane components, insulation and signalling molecules. Since lipids are non-polar, they are insoluble in water but soluble in organic solvents.</p>
+            <p><strong>Emulsification Test:</strong> Lipids form a white emulsion when ethanol extracts are added to water. This is due to the formation of small lipid droplets suspended in water.</p>
+            <p><strong>Sudan III/IV Staining:</strong> Sudan dyes are hydrophobic and preferentially dissolve in lipid droplets, staining them red-orange (Sudan III) or red (Sudan IV).</p>
+
+            <div class="exp-label">Materials and Apparatus</div>
+            <ul>
+              <li>Test tubes and test tube rack</li>
+              <li>Ethanol (absolute)</li>
+              <li>Sudan III or Sudan IV stain</li>
+              <li>Lipid samples: cooking oil, butter, lard</li>
+              <li>Brown paper (grease spot test)</li>
+              <li>Dropper and pipette</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p><strong>Emulsification Test:</strong> Dissolve a few drops of cooking oil in 2 cm³ of ethanol. Add this mixture to 3 cm³ of water. Shake vigorously. A milky-white emulsion confirms the presence of lipid.</p>
+            <p><strong>Sudan III Stain:</strong> Place a drop of oil on a glass slide. Add a drop of Sudan III solution. Observe under microscope or with naked eye. Orange-red coloration indicates lipid.</p>
+            <p><strong>Grease Spot Test:</strong> Rub a drop of the sample on brown paper. Hold up to light after allowing to dry. A translucent spot indicates lipid (greasy residue).</p>
+
+            <div class="exp-label">Results Table</div>
+            <table class="data-table">
+              <thead><tr><th>Test</th><th>Observation</th><th>Inference</th></tr></thead>
+              <tbody>
+                <tr><td>Emulsification</td><td>White/milky emulsion</td><td>Lipid present</td></tr>
+                <tr><td>Sudan III Stain</td><td>Orange-red coloration</td><td>Lipid present</td></tr>
+                <tr><td>Grease Spot</td><td>Translucent spot on paper</td><td>Lipid present</td></tr>
+              </tbody>
+            </table>
+
+            <div class="exp-label">Discussion</div>
+            <p>Explain each test on the basis of the hydrophobic nature of lipids. Discuss which lipid samples gave the most distinct results. Explain why lipids dissolve readily in ethanol but not in water.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>Confirm the presence of lipids in each sample tested. State whether the aim was achieved.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+
+        <!-- EXPERIMENT 4 -->
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 4</div>
+              <h3>Determination of Enzyme Activity (Amylase)</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To determine the activity of amylase enzyme on starch and the effect of temperature on enzyme activity.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>Enzymes are biological catalysts — proteins that speed up chemical reactions in living organisms without being consumed. Amylase is an enzyme that catalyzes the hydrolysis of starch into simpler sugars (maltose and glucose).</p>
+            <p>Enzyme activity is affected by temperature, pH, substrate concentration, and inhibitors. At optimal temperature, enzyme activity is maximum. Above this temperature, enzymes are denatured and activity falls sharply. The rate of an enzyme-catalyzed reaction can be monitored by the rate of substrate disappearance or product formation.</p>
+
+            <div class="exp-label">Materials and Apparatus</div>
+            <ul>
+              <li>1% starch solution</li>
+              <li>Salivary amylase (fresh saliva diluted 1:10) or commercial amylase</li>
+              <li>Iodine solution</li>
+              <li>Benedict's reagent</li>
+              <li>Water baths at different temperatures: 20°C, 37°C, 60°C, 80°C</li>
+              <li>Test tubes, stopwatch, dropper</li>
+              <li>Spotting tile</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p>Place 5 cm³ of starch solution and 1 cm³ of amylase solution in test tubes. Incubate at different temperatures (20°C, 37°C, 60°C, 80°C) for 10 minutes. Take samples at 2-minute intervals. Test each sample with iodine on a spotting tile. Record the time taken for the iodine test to give no blue-black colour (complete hydrolysis of starch).</p>
+
+            <div class="exp-label">Results Table</div>
+            <table class="data-table">
+              <thead><tr><th>Temperature (°C)</th><th>Time for Starch Hydrolysis (min)</th><th>Observation with Iodine</th></tr></thead>
+              <tbody>
+                <tr><td>20</td><td>[Record]</td><td>[Blue-black or no change]</td></tr>
+                <tr><td>37</td><td>[Record]</td><td>[Record]</td></tr>
+                <tr><td>60</td><td>[Record]</td><td>[Record]</td></tr>
+                <tr><td>80</td><td>[Record]</td><td>[Record]</td></tr>
+              </tbody>
+            </table>
+
+            <div class="exp-label">Discussion</div>
+            <p>Discuss how temperature affects enzyme activity. Explain the concept of optimum temperature. Account for the loss of activity at high temperatures (denaturation). Draw and discuss a graph of enzyme activity vs temperature.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>State the optimal temperature for amylase activity based on your results. Confirm whether the aim was achieved.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- end biochem -->
+
+    <!-- ══ GENETICS ══ -->
+    <div class="tab-panel" data-panel="genetics">
+      <div style="padding:24px 24px 0">
+        <div class="section-label">STB 221 — Genetics</div>
+        <p class="section-sub">Laboratory practicals for Genetics, ND2 Second Semester.</p>
+      </div>
+
+      <div style="padding:0 24px">
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 1</div>
+              <h3>Preparation and Observation of Mitosis in Onion Root Tips</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To prepare and observe the stages of mitosis (cell division) in onion root tip cells using the squash technique and acetocarmine staining.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>Mitosis is a type of cell division in which one parent cell divides to produce two genetically identical daughter cells, each with the same number of chromosomes as the parent. Mitosis is essential for growth, repair, and asexual reproduction in organisms.</p>
+            <p>The stages of mitosis are: Interphase (preparation), Prophase (chromosomes condense), Metaphase (chromosomes align at equatorial plate), Anaphase (sister chromatids separate), and Telophase (cell divides). Plant root tips are ideal for observing mitosis because cells in the meristematic zone are actively dividing.</p>
+
+            <div class="exp-label">Materials and Apparatus</div>
+            <ul>
+              <li>Fresh onion (Allium cepa) root tips (grown in water for 2–3 days)</li>
+              <li>Acetocarmine or Feulgen stain</li>
+              <li>1 N hydrochloric acid</li>
+              <li>Slides and cover slips</li>
+              <li>Forceps, scalpel, water bath</li>
+              <li>Compound microscope</li>
+              <li>Aceto-orcein stain (alternative)</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p>Cut off 1–2 cm of growing root tips. Place in 1 N HCl at 60°C for 5–8 minutes (maceration). Transfer to acetocarmine stain and heat gently for 5 minutes. Place a root tip on a clean slide. Add a drop of acetocarmine. Cover with a cover slip. Press firmly with a pencil eraser (squash technique) to spread cells. Observe under the microscope at ×10 then ×40.</p>
+
+            <div class="exp-label">Results — Stages to Look For</div>
+            <table class="data-table">
+              <thead><tr><th>Stage</th><th>Microscopic Appearance</th></tr></thead>
+              <tbody>
+                <tr><td>Interphase</td><td>Nucleus visible, chromatin dispersed (resting stage)</td></tr>
+                <tr><td>Prophase</td><td>Chromosomes condense and become visible, nuclear envelope breaks down</td></tr>
+                <tr><td>Metaphase</td><td>Chromosomes aligned at the cell's equatorial plate (metaphase plate)</td></tr>
+                <tr><td>Anaphase</td><td>Sister chromatids pulled to opposite poles of the cell</td></tr>
+                <tr><td>Telophase</td><td>Two new nuclei form, cell plate appears between daughter cells</td></tr>
+              </tbody>
+            </table>
+            <p>Draw diagrams of each stage observed. Label the chromosomes, cell wall, and spindle fibres where visible.</p>
+
+            <div class="exp-label">Discussion</div>
+            <p>Describe the stages of mitosis observed. Explain the significance of each stage. Discuss why the meristematic zone of the root tip is used. Discuss any difficulties encountered in preparing the slide.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>Confirm whether the stages of mitosis were successfully observed. State the significance of mitosis in the life of an organism.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 2</div>
+              <h3>Monohybrid Cross — Simulation with Beads</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To simulate a monohybrid cross and verify Mendel's Law of Segregation using coloured beads or coins to represent alleles.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>Gregor Mendel's Law of Segregation states that during the formation of gametes, the two alleles for a gene separate so that each gamete contains only one allele. When these gametes fuse at fertilization, the offspring receives one allele from each parent.</p>
+            <p>In a monohybrid cross between two heterozygous parents (Aa × Aa), the expected phenotypic ratio in the offspring is 3:1 (dominant to recessive), and the genotypic ratio is 1:2:1 (AA:Aa:aa).</p>
+            <p>Let A = dominant allele (e.g. tall); a = recessive allele (e.g. dwarf).</p>
+
+            <div class="exp-label">Materials</div>
+            <ul>
+              <li>Two bags containing coloured beads (e.g. 50 red beads = A, 50 white beads = a) — one bag per parent</li>
+              <li>Table for recording results</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p>Label two bags as "Parent 1" and "Parent 2." Place 50 red (A) and 50 white (a) beads in each bag. Without looking, randomly pick one bead from each bag simultaneously. Record the combination obtained. Return the beads and repeat 100 times. Count and tabulate the results: AA, Aa, aA, aa.</p>
+
+            <div class="exp-label">Expected Results</div>
+            <table class="data-table">
+              <thead><tr><th>Combination</th><th>Genotype</th><th>Phenotype</th><th>Expected Frequency (out of 100)</th><th>Observed Frequency</th></tr></thead>
+              <tbody>
+                <tr><td>Red + Red</td><td>AA</td><td>Dominant (Tall)</td><td>25</td><td>[Record]</td></tr>
+                <tr><td>Red + White / White + Red</td><td>Aa / aA</td><td>Dominant (Tall)</td><td>50</td><td>[Record]</td></tr>
+                <tr><td>White + White</td><td>aa</td><td>Recessive (Dwarf)</td><td>25</td><td>[Record]</td></tr>
+              </tbody>
+            </table>
+
+            <div class="exp-label">Discussion</div>
+            <p>Compare observed ratios to the expected 1:2:1 genotypic and 3:1 phenotypic ratios. Discuss any deviations from expected ratios and explain using probability theory. Relate the simulation to Mendel's Law of Segregation. Explain why the ratio might not be exactly 3:1 in a small sample.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>State the genotypic and phenotypic ratios obtained. Confirm whether the results support Mendel's Law of Segregation.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 3</div>
+              <h3>Preparation and Observation of Chromosomes (Karyotyping)</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To prepare a karyotype by arranging photographs or diagrams of human chromosomes in homologous pairs and interpret the karyotype for chromosomal abnormalities.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>A karyotype is the complete set of chromosomes in a cell, arranged in homologous pairs in order of decreasing size. The normal human karyotype contains 46 chromosomes (23 pairs), including 22 pairs of autosomes and one pair of sex chromosomes (XX in females, XY in males). Karyotyping is used to detect chromosomal abnormalities such as Down syndrome (trisomy 21), Turner syndrome (45,X), and Klinefelter syndrome (47,XXY).</p>
+
+            <div class="exp-label">Materials</div>
+            <ul>
+              <li>Printed photographs or drawings of human chromosomes (from a standard karyotype sheet)</li>
+              <li>Scissors and glue or tape</li>
+              <li>Ruler for measuring chromosome lengths</li>
+              <li>Karyotype analysis sheet</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p>Cut out each chromosome from the photograph. Arrange the chromosomes in homologous pairs from largest (pair 1) to smallest (pair 22), plus the sex chromosomes. Paste them in order on the karyotype sheet. Determine the sex of the individual from the sex chromosomes. Examine for any chromosomal abnormalities (extra or missing chromosomes).</p>
+
+            <div class="exp-label">Results</div>
+            <p>Completed karyotype chart showing all 23 pairs of chromosomes arranged by size. Record: Total number of chromosomes observed, sex of the individual (XX or XY), any chromosomal abnormalities detected.</p>
+
+            <div class="exp-label">Discussion</div>
+            <p>Describe the karyotype prepared. Identify the sex of the individual. Discuss any abnormalities detected and their clinical significance. Explain the process of meiosis and how non-disjunction leads to chromosomal abnormalities.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>State the number of chromosomes counted, the sex determined, and whether any abnormality was detected. Confirm whether the aim was achieved.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- end genetics -->
+
+    <!-- ══ ECOLOGY ══ -->
+    <div class="tab-panel" data-panel="ecology">
+      <div style="padding:24px 24px 0">
+        <div class="section-label">STB 222 — Ecology</div>
+        <p class="section-sub">Laboratory practicals for Ecology, ND2 Second Semester.</p>
+      </div>
+
+      <div style="padding:0 24px">
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 1</div>
+              <h3>Study of an Ecosystem — Soil Sampling and Analysis</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To collect soil samples from different habitats, analyze their physical and chemical properties, and relate the properties to the organisms found in that habitat.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>Soil is a complex mixture of inorganic minerals, organic matter, water, air, and living organisms. It forms the foundation of terrestrial ecosystems. The physical properties of soil (texture, porosity, water content) and chemical properties (pH, mineral content, organic matter) determine the types of organisms that can live in and on the soil.</p>
+            <p>Soil pH affects nutrient availability. Most plants grow best in slightly acidic to neutral soil (pH 6.0–7.0). Soil texture (proportion of sand, silt and clay) affects drainage and aeration. Sandy soils drain quickly but hold few nutrients; clay soils hold water and nutrients but have poor drainage.</p>
+
+            <div class="exp-label">Materials and Apparatus</div>
+            <ul>
+              <li>Soil samples from at least two different habitats (e.g. garden soil, forest soil, waterlogged area)</li>
+              <li>pH meter or universal indicator paper</li>
+              <li>Drying oven and weighing balance</li>
+              <li>Filter paper, funnel, beaker</li>
+              <li>Measuring cylinder</li>
+              <li>Hand lens or magnifying glass</li>
+              <li>Petri dishes</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p><strong>Water Content:</strong> Weigh a known mass of fresh soil. Dry in oven at 105°C for 24 hours. Reweigh. Calculate percentage water content: [(fresh weight − dry weight) / fresh weight] × 100.</p>
+            <p><strong>Soil pH:</strong> Mix 10 g of soil with 25 cm³ of distilled water. Stir and allow to settle. Measure pH of the supernatant.</p>
+            <p><strong>Soil Texture:</strong> Rub a moist sample between fingers. Sandy soil feels gritty; silt feels silky; clay feels sticky when wet and hard when dry.</p>
+            <p><strong>Percolation Rate:</strong> Fill a funnel with a measured amount of soil. Pour 100 cm³ of water slowly. Measure the volume and time for water to drain through.</p>
+
+            <div class="exp-label">Results Table</div>
+            <table class="data-table">
+              <thead><tr><th>Property</th><th>Habitat A (Record)</th><th>Habitat B (Record)</th></tr></thead>
+              <tbody>
+                <tr><td>pH</td><td></td><td></td></tr>
+                <tr><td>Water content (%)</td><td></td><td></td></tr>
+                <tr><td>Texture</td><td></td><td></td></tr>
+                <tr><td>Percolation rate</td><td></td><td></td></tr>
+                <tr><td>Colour</td><td></td><td></td></tr>
+              </tbody>
+            </table>
+
+            <div class="exp-label">Discussion</div>
+            <p>Compare the properties of soils from different habitats. Relate the physical and chemical properties to the vegetation and organisms observed in each habitat. Discuss the importance of soil pH in nutrient availability. Explain how soil texture affects drainage, aeration and water retention.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>Summarize the differences between the soil samples analyzed. Relate your findings to the types of organisms that can survive in each soil type. Confirm whether the aim was achieved.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 2</div>
+              <h3>Population Estimation Using the Quadrat Method</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To estimate the population density and distribution of plant species in a given area using the quadrat method.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>A quadrat is a square frame of a known size used to sample the number and type of organisms in a defined area of a habitat. By counting the organisms in multiple quadrats placed randomly, ecologists can estimate the total population in a larger area. The quadrat method is particularly useful for slow-moving or sessile organisms such as plants, barnacles, and lichens.</p>
+            <p>Population density = Total number of individuals counted / Total area sampled. Frequency = Number of quadrats in which the species occurs / Total number of quadrats placed × 100%.</p>
+
+            <div class="exp-label">Materials and Apparatus</div>
+            <ul>
+              <li>Quadrat frame (0.5 m × 0.5 m or 1 m × 1 m) made of wire or string</li>
+              <li>Random number table or measuring tape</li>
+              <li>Tally counter and data recording sheet</li>
+              <li>Identification keys for plant species (if available)</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p>Select a study area (e.g. school compound lawn or nearby field). Using random number tables or stepping method, place the quadrat at random positions in the study area. Within each quadrat, count the number of each plant species present. Repeat for at least 10 quadrats. Calculate population density and frequency for each species.</p>
+
+            <div class="exp-label">Results Table</div>
+            <table class="data-table">
+              <thead><tr><th>Quadrat No.</th><th>Species A Count</th><th>Species B Count</th><th>Species C Count</th><th>Total</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>[Record]</td><td>[Record]</td><td>[Record]</td><td></td></tr>
+                <tr><td>2</td><td>[Record]</td><td>[Record]</td><td>[Record]</td><td></td></tr>
+                <tr><td>3</td><td>[Record]</td><td>[Record]</td><td>[Record]</td><td></td></tr>
+                <tr><td>...</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td><strong>Total</strong></td><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+            <div class="formula">Population Density = Total individuals counted ÷ Total area sampled
+Frequency (%) = (Quadrats with species ÷ Total quadrats) × 100</div>
+
+            <div class="exp-label">Discussion</div>
+            <p>Discuss the distribution pattern of each species (uniform, random, or clumped). Relate the distribution patterns to environmental factors (light, water, soil type). Discuss limitations of the quadrat method. Compare the population densities of different species.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>State the population density and frequency of each species identified. Confirm whether the aim was achieved. Comment on the health of the ecosystem studied.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-num">EXPERIMENT 3</div>
+              <h3>Construction and Analysis of a Food Chain and Food Web</h3>
+            </div>
+            <span class="exp-toggle">▼</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-label">Aim</div>
+            <p>To construct a food chain and food web from collected field data and analyze the flow of energy through an ecosystem.</p>
+
+            <div class="exp-label">Introduction</div>
+            <p>A food chain is a linear sequence of organisms through which nutrients and energy pass as one organism eats another. A food web is a network of interconnected food chains representing the feeding relationships in an ecosystem. Energy flows unidirectionally through the ecosystem — from producers (plants) to primary consumers (herbivores) to secondary consumers (carnivores) to tertiary consumers.</p>
+            <p>Only about 10% of the energy at one trophic level is transferred to the next trophic level (10% rule). This is because energy is lost as heat through metabolism, movement, and respiration. Pyramids of numbers, biomass and energy can be used to represent trophic levels.</p>
+            <p>Types of organisms: Producers (autotrophs), Primary consumers (herbivores), Secondary consumers (carnivores), Tertiary consumers (top carnivores), Decomposers (bacteria, fungi).</p>
+
+            <div class="exp-label">Materials</div>
+            <ul>
+              <li>Field notebook with observations of organisms in a study area</li>
+              <li>Pencil, ruler, and drawing paper</li>
+              <li>Reference books on local flora and fauna</li>
+            </ul>
+
+            <div class="exp-label">Procedure</div>
+            <p>Identify the major producers, consumers and decomposers in a study area from field observations. List at least 8–10 organisms. Construct at least 3 food chains from the data. Connect the food chains into a food web by drawing arrows from food source to consumer. Construct a pyramid of numbers based on the data collected.</p>
+
+            <div class="exp-label">Sample Food Chains to Draw (from a forest ecosystem)</div>
+            <div class="formula">Grass → Grasshopper → Frog → Snake → Hawk
+Leaf litter → Earthworm → Thrush → Sparrowhawk
+Phytoplankton → Zooplankton → Small fish → Large fish → Osprey</div>
+
+            <div class="exp-label">Results</div>
+            <p>Draw and label your food web clearly with arrows showing energy flow direction. Construct a pyramid of numbers showing the organisms at each trophic level. Label: Producers, Primary consumers, Secondary consumers, Tertiary consumers, Decomposers.</p>
+
+            <div class="exp-label">Discussion</div>
+            <p>Discuss the importance of producers in the ecosystem. Explain why the energy pyramid is broad at the base and narrow at the top. Discuss the role of decomposers in nutrient cycling. Explain what would happen if one organism in the food web was removed (keystone species concept). Relate the 10% energy transfer rule to the length of food chains.</p>
+
+            <div class="exp-label">Conclusion</div>
+            <p>Summarize the trophic structure of the ecosystem studied. State the significance of food webs in ecological studies. Confirm whether the aim was achieved.</p>
+            <button class="print-btn" onclick="window.print()">🖨 Print This Report</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- end ecology -->
+
+  </div><!-- end tab-section -->
+
+</main>
+<div id="footer-inject"></div>
+<script>
+/* ============================================================
+   SLT UNDERGROUND — CONFIGURATION
+   Supabase, Groq, Gemini keys and shared config
+   ============================================================ */
+
+const SLT_CONFIG = {
+  supabase: {
+    url: 'https://ayoofobsthcnqzguuxmm.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5b29mb2JzdGhjbnF6Z3V1eG1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjQwODgsImV4cCI6MjA5NDUwMDA4OH0.AHK34Dmc3WiHloX3IYBJoLTqjDKHBp6lvrWfrrAVF_M',
+    buckets: {
+      pastQuestions: 'past-questions',
+      nd2Notes: 'nd2-notes',
+      reportBooks: 'report-books'
+    }
+  },
+  ai: {
+    groq: {
+      url: 'https://api.groq.com/openai/v1/chat/completions',
+      key: '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',
+      model: 'llama-3.3-70b-versatile'
+    },
+    gemini: {
+      url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+      key: 'AIzaSyDbzhZeLA0lXi_AewU7N1rBZRK63whIqSE'
+    }
+  },
+  admin: {
+    password: '#Toughidosh04'
+  }
+};
+
+/* ── SUPABASE HELPERS ── */
+async function supabaseUpload(bucket, file, path) {
+  const url = `${SLT_CONFIG.supabase.url}/storage/v1/object/${bucket}/${path}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${SLT_CONFIG.supabase.anonKey}`,
+      'Content-Type': file.type,
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return `${SLT_CONFIG.supabase.url}/storage/v1/object/public/${bucket}/${path}`;
+}
+
+async function supabaseList(bucket, folder = '') {
+  const url = `${SLT_CONFIG.supabase.url}/storage/v1/object/list/${bucket}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${SLT_CONFIG.supabase.anonKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ prefix: folder, limit: 200, offset: 0 })
+  });
+  if (!res.ok) return [];
+  return await res.json();
+}
+
+async function supabaseDelete(bucket, path) {
+  const url = `${SLT_CONFIG.supabase.url}/storage/v1/object/${bucket}/${path}`;
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${SLT_CONFIG.supabase.anonKey}` }
+  });
+  return res.ok;
+}
+
+function supabasePublicUrl(bucket, path) {
+  return `${SLT_CONFIG.supabase.url}/storage/v1/object/public/${bucket}/${path}`;
+}
+
+/* ── AI CALL WITH GROQ → GEMINI FALLBACK ── */
+async function callProsperAI(messages, systemPrompt) {
+  // Try Groq first
+  try {
+    const res = await fetch(SLT_CONFIG.ai.groq.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SLT_CONFIG.ai.groq.key}`
+      },
+      body: JSON.stringify({
+        model: SLT_CONFIG.ai.groq.model,
+        max_tokens: 1000,
+        messages: [{ role: 'system', content: systemPrompt }, ...messages]
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.choices?.[0]?.message?.content) {
+        return { text: data.choices[0].message.content, provider: 'groq' };
+      }
+    }
+  } catch (e) { console.warn('Groq failed, switching to Gemini...', e); }
+
+  // Fallback to Gemini
+  try {
+    const geminiMessages = messages.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+    const res = await fetch(`${SLT_CONFIG.ai.gemini.url}?key=${SLT_CONFIG.ai.gemini.key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: geminiMessages,
+        generationConfig: { maxOutputTokens: 1000 }
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) return { text, provider: 'gemini' };
+    }
+  } catch (e) { console.warn('Gemini also failed:', e); }
+
+  return { text: 'Both AI providers are currently unavailable. Please try again in a moment. 💎', provider: 'none' };
+}
+
+
+/* ============================================================
+   SLT UNDERGROUND — NAV TEMPLATE
+   Injects nav + topbar + footer into every page
+   ============================================================ */
+
+function getNavHTML(basePath = '') {
+  return `
+  <div class="nav-overlay"></div>
+
+  <nav class="side-nav">
+    <div class="nav-header">
+      <div class="nav-logo">SLT <span>Underground</span></div>
+      <button class="nav-close">✕</button>
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a class="nav-link" href="${basePath}index.html">
+          <span><span class="nav-icon">🏠</span> Home</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="${basePath}../brochure/">
+          <span><span class="nav-icon">📋</span> SLT Brochure</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <div class="nav-link" data-sub="sub-pq">
+          <span><span class="nav-icon">📝</span> Past Questions</span>
+          <span class="nav-arrow">›</span>
+        </div>
+        <ul class="sub-nav" id="sub-pq">
+          <li><a class="sub-nav-link" href="${basePath}../past-questions/?level=nd1">ND1 Past Questions</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../past-questions/?level=nd2">ND2 Past Questions</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <div class="nav-link" data-sub="sub-notes">
+          <span><span class="nav-icon">📚</span> ND2 Notes</span>
+          <span class="nav-arrow">›</span>
+        </div>
+        <ul class="sub-nav" id="sub-notes">
+          <li><a class="sub-nav-link" href="${basePath}../notes/?course=stc211">STC 211 — Inorganic Chemistry</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../notes/?course=stc212">STC 212 — Analytical Chemistry</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../notes/?course=stp211">STP 211 — Electronics</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../notes/?course=micro">Microbiology — Control of Microorganisms</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../notes/?course=excel">Microsoft Excel for SLT</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../notes/?course=stats">Research &amp; Statistics</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <div class="nav-link" data-sub="sub-reports">
+          <span><span class="nav-icon">🔬</span> ND2 Report Books</span>
+          <span class="nav-arrow">›</span>
+        </div>
+        <ul class="sub-nav" id="sub-reports">
+          <li><a class="sub-nav-link" href="${basePath}../report-books/?sub=biochem">Biochemistry (STC 222)</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../report-books/?sub=genetics">Genetics (STB 221)</a></li>
+          <li><a class="sub-nav-link" href="${basePath}../report-books/?sub=ecology">Ecology (STB 222)</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="${basePath}../gp-calculator/">
+          <span><span class="nav-icon">🎓</span> GP Calculator</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="${basePath}../prosper-ai/">
+          <span><span class="nav-icon">💎</span> Prosper AI <span class="badge-new">NEW</span></span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="${basePath}../about/">
+          <span><span class="nav-icon">👤</span> About the Founder</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="${basePath}../timetable/">
+          <span><span class="nav-icon">📅</span> Timetable</span>
+        </a>
+      </li>
+
+      <li class="nav-section-label">External</li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank">
+          <span><span class="nav-icon">🌐</span> School Portal</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-footer">
+      <div class="nav-avatar">OP</div>
+      <div class="nav-founder-info">
+        <p>Prosperpeace</p>
+        <span>Founder — ND2 Class of 2026</span>
+      </div>
+    </div>
+  </nav>
+
+  <header class="topbar">
+    <button class="hamburger" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-logo">SLT <span>Underground</span></div>
+    <div class="topbar-right">
+      <a class="topbar-ai-btn" href="${basePath}../prosper-ai/">💎 Prosper AI</a>
+    </div>
+  </header>`;
+}
+
+function getFooterHTML(basePath = '') {
+  return `
+  <footer class="site-footer">
+    <div class="footer-logo">SLT Underground</div>
+    <div class="footer-tagline">Everything an SLT student at Poly Ibadan needs. From your first day to graduation day.</div>
+    <div class="footer-links">
+      <a class="footer-link" href="${basePath}index.html">Home</a>
+      <a class="footer-link" href="${basePath}../brochure/">SLT Brochure</a>
+      <a class="footer-link" href="${basePath}../past-questions/">Past Questions</a>
+      <a class="footer-link" href="${basePath}../notes/">ND2 Notes</a>
+      <a class="footer-link" href="${basePath}../report-books/">Report Books</a>
+      <a class="footer-link" href="${basePath}../gp-calculator/">GP Calculator</a>
+      <a class="footer-link" href="${basePath}../prosper-ai/">Prosper AI</a>
+      <a class="footer-link" href="${basePath}../about/">About</a>
+      <a class="footer-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank">School Portal</a>
+    </div>
+    <div class="footer-bottom">
+      Built by <span>Oyekanmi Prosperpeace Oluwajuwonlo</span> — ND2 Class of 2026 •
+      The Polytechnic Ibadan, Dept. of Science Laboratory Technology •
+      Free forever. Share freely. 💎
+    </div>
+  </footer>`;
+}
+
+// Inject nav and footer
+document.addEventListener('DOMContentLoaded', () => {
+  const isInPages = location.pathname.includes('/pages/');
+  const basePath  = isInPages ? '../' : '';
+
+  const navTarget  = document.getElementById('nav-inject');
+  const footTarget = document.getElementById('footer-inject');
+
+  if (navTarget)  navTarget.outerHTML = getNavHTML(basePath);
+  if (footTarget) footTarget.outerHTML = getFooterHTML(basePath);
+});
+
+
+/* ============================================================
+   SLT UNDERGROUND — SHARED JAVASCRIPT
+   Navigation, tabs, expandable cards, search, GP Calculator
+   ============================================================ */
+
+// ── NAV TOGGLE ──
+function initNav() {
+  const hamburger = document.querySelector('.hamburger');
+  const sideNav   = document.querySelector('.side-nav');
+  const overlay   = document.querySelector('.nav-overlay');
+  const closeBtn  = document.querySelector('.nav-close');
+
+  function openNav()  { sideNav.classList.add('open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeNav() { sideNav.classList.remove('open'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+  hamburger && hamburger.addEventListener('click', openNav);
+  closeBtn  && closeBtn.addEventListener('click', closeNav);
+  overlay   && overlay.addEventListener('click', closeNav);
+
+  // Sub-menus
+  document.querySelectorAll('.nav-link[data-sub]').forEach(link => {
+    link.addEventListener('click', () => {
+      const subId = link.dataset.sub;
+      const sub   = document.getElementById(subId);
+      const arrow = link.querySelector('.nav-arrow');
+      if (!sub) return;
+      const isOpen = sub.classList.toggle('open');
+      link.classList.toggle('expanded', isOpen);
+    });
+  });
+
+  // Active link
+  const currentPage = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-link[href], .sub-nav-link[href]').forEach(el => {
+    if (el.getAttribute('href') === currentPage) el.classList.add('active');
+  });
+}
+
+// ── TABS ──
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      const parent = btn.closest('.tab-section') || document;
+      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      parent.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = parent.querySelector(`[data-panel="${target}"]`);
+      panel && panel.classList.add('active');
+    });
+  });
+}
+
+// ── EXPANDABLE EXPERIMENT CARDS ──
+function initExpCards() {
+  document.querySelectorAll('.exp-card-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const body   = header.nextElementSibling;
+      const toggle = header.querySelector('.exp-toggle');
+      if (!body) return;
+      const isOpen = body.classList.toggle('open');
+      toggle && toggle.classList.toggle('open', isOpen);
+    });
+  });
+}
+
+// ── SEARCH FILTER ──
+function initSearch(inputSelector, itemSelector, textSelector) {
+  const input = document.querySelector(inputSelector);
+  if (!input) return;
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase();
+    document.querySelectorAll(itemSelector).forEach(item => {
+      const text = (item.querySelector(textSelector) || item).textContent.toLowerCase();
+      item.style.display = text.includes(q) ? '' : 'none';
+    });
+  });
+}
+
+// ── GP CALCULATOR ──
+const GRADE_TABLE = [
+  { min: 75, max: 100, letter: 'A',  gp: 4.0 },
+  { min: 70, max: 74,  letter: 'AB', gp: 3.5 },
+  { min: 65, max: 69,  letter: 'B',  gp: 3.25 },
+  { min: 60, max: 64,  letter: 'BC', gp: 3.0 },
+  { min: 55, max: 59,  letter: 'C',  gp: 2.75 },
+  { min: 50, max: 54,  letter: 'CD', gp: 2.5 },
+  { min: 45, max: 49,  letter: 'D',  gp: 2.25 },
+  { min: 40, max: 44,  letter: 'DE', gp: 2.0 },
+  { min: 0,  max: 39,  letter: 'F',  gp: 0.0 },
+];
+
+function getGrade(score) {
+  return GRADE_TABLE.find(g => score >= g.min && score <= g.max) || GRADE_TABLE[GRADE_TABLE.length - 1];
+}
+
+function getDiplomaClass(cgpa) {
+  if (cgpa >= 3.50) return 'Distinction 🏆';
+  if (cgpa >= 3.00) return 'Upper Credit ⭐';
+  if (cgpa >= 2.50) return 'Lower Credit ✅';
+  if (cgpa >= 2.00) return 'Pass';
+  return 'Failure';
+}
+
+function initGPCalc() {
+  const calcBtn = document.getElementById('calc-btn');
+  if (!calcBtn) return;
+
+  calcBtn.addEventListener('click', calculateGPA);
+
+  function calculateGPA() {
+    const rows = document.querySelectorAll('.course-row');
+    let totalPoints = 0, totalUnits = 0, valid = true;
+
+    rows.forEach(row => {
+      const scoreInput = row.querySelector('.score-input');
+      const unitInput  = row.querySelector('.unit-input');
+      const gradeOut   = row.querySelector('.grade-out');
+      if (!scoreInput || !unitInput) return;
+
+      const score = parseFloat(scoreInput.value);
+      const unit  = parseFloat(unitInput.value);
+      if (isNaN(score) || isNaN(unit) || unit <= 0) { valid = false; return; }
+
+      const grade = getGrade(score);
+      if (gradeOut) { gradeOut.textContent = grade.letter; gradeOut.style.color = grade.gp >= 2 ? '#E8650A' : '#ff4444'; }
+      totalPoints += grade.gp * unit;
+      totalUnits  += unit;
+    });
+
+    if (!valid || totalUnits === 0) {
+      alert('Please fill in all scores and credit units correctly.');
+      return;
+    }
+
+    const gpa = (totalPoints / totalUnits).toFixed(2);
+    const gpaDisplay = document.getElementById('gpa-result');
+    const classDisplay = document.getElementById('class-result');
+    if (gpaDisplay) gpaDisplay.textContent = gpa;
+    if (classDisplay) classDisplay.textContent = getDiplomaClass(parseFloat(gpa));
+
+    document.getElementById('gp-result-card') && (document.getElementById('gp-result-card').style.display = 'block');
+  }
+
+  const addBtn = document.getElementById('add-course-btn');
+  addBtn && addBtn.addEventListener('click', () => {
+    const container = document.getElementById('courses-container');
+    if (!container) return;
+    const count = container.querySelectorAll('.course-row').length + 1;
+    const row   = document.createElement('div');
+    row.className = 'course-row';
+    row.innerHTML = `
+      <div class="gp-row">
+        <input class="gp-input score-input" type="number" min="0" max="100" placeholder="Score (0-100)">
+        <input class="gp-input unit-input" type="number" min="1" max="6" placeholder="Units" style="width:80px">
+        <span class="grade-out" style="font-family:var(--font-mono);font-size:0.85rem;color:var(--white-dim);text-align:center">--</span>
+      </div>`;
+    container.appendChild(row);
+  });
+}
+
+// ── PROSPER AI CHAT ──
+function initAIChat() {
+  const chatWindow = document.getElementById('chat-window');
+  const chatInput  = document.getElementById('chat-input');
+  const sendBtn    = document.getElementById('send-btn');
+  if (!chatWindow || !chatInput || !sendBtn) return;
+
+  let activeMode = '';
+  let chatHistory = [];
+
+  document.querySelectorAll('.mode-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.mode-chip').forEach(c => c.classList.remove('active'));
+      if (activeMode === chip.dataset.mode) { activeMode = ''; }
+      else { chip.classList.add('active'); activeMode = chip.dataset.mode; }
+    });
+  });
+
+  async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    appendMsg(text, 'user');
+    chatHistory.push({ role: 'user', content: text });
+    chatInput.value = '';
+    sendBtn.disabled = true;
+    const thinkingEl = appendMsg('💎 thinking...', 'ai');
+
+    const systemPrompt = `You are Prosper AI 💎 — the official AI assistant of SLT Underground, built for Science Laboratory Technology students at The Polytechnic Ibadan by Oyekanmi Prosperpeace Oluwajuwonlo.
+
+Your identity: deep, intellectual, science-focused. Never reveal you are Claude. You are Prosper AI.
+End every response with 💎
+
+Context: The Polytechnic Ibadan, Department of SLT, ND1 and ND2 students.
+Grading: A=75-100(4.0), AB=70-74(3.5), B=65-69(3.25), BC=60-64(3.0), C=55-59(2.75), CD=50-54(2.5), D=45-49(2.25), DE=40-44(2.0), F=0-39(0).
+Diploma classes: Distinction(3.50-4.00), Upper Credit(3.00-3.49), Lower Credit(2.50-2.99), Pass(2.00-2.49).
+
+Modes:
+- /Godmode: full detailed step by step explanations with examples
+- /L99: advanced beyond textbook level, cutting edge
+- /ghostmode: pure raw answers, no fluff
+
+Current mode: ${activeMode || 'normal'}
+
+Courses available on site: STC 211 (Inorganic Chemistry - water hardness, group elements), STC 212 (Analytical Chemistry - spectrophotometry, AAS), STP 211 (Electronics - semiconductors, diodes, transistors), Control of Microorganisms (sterilization methods, chemical control), Microsoft Excel for SLT, Statistics and Research methodology.`;
+
+    try {
+      const result = await callProsperAI(chatHistory, systemPrompt);
+      thinkingEl.innerHTML = formatAIReply(result.text);
+      chatHistory.push({ role: 'assistant', content: result.text });
+    } catch (err) {
+      thinkingEl.innerHTML = 'Connection error. Please try again. 💎';
+    }
+
+    sendBtn.disabled = false;
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  function appendMsg(text, role) {
+    const wrapper = document.createElement('div');
+    wrapper.className = `chat-msg ${role}`;
+    const avatar = document.createElement('div');
+    avatar.className = `msg-avatar ${role === 'ai' ? 'ai' : ''}`;
+    avatar.textContent = role === 'ai' ? '💎' : 'ME';
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.innerHTML = formatAIReply(text);
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(bubble);
+    chatWindow.appendChild(wrapper);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    return bubble;
+  }
+
+  function formatAIReply(text) {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, `<code style="font-family:var(--font-mono);font-size:0.82em;background:rgba(232,101,10,0.1);padding:1px 5px;border-radius:3px;color:var(--orange-light)">$1</code>`)
+      .replace(/
+
+/g, '</p><p style="margin-top:8px">')
+      .replace(/
+/g, '<br>');
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+}
+
+// ── FILTER BUTTONS ──
+function initFilterBtns() {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.dataset.group;
+      document.querySelectorAll(`.filter-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filterVal = btn.dataset.filter;
+      document.querySelectorAll('[data-filterable]').forEach(item => {
+        if (filterVal === 'all' || item.dataset[group] === filterVal) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+}
+
+// ── INIT ALL ──
+document.addEventListener('DOMContentLoaded', () => {
+  initNav();
+  initTabs();
+  initExpCards();
+  initGPCalc();
+  initAIChat();
+  initFilterBtns();
+});
+
+</script>
+<script>
+  // Set active tab from URL param
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(location.search);
+    const sub = params.get('sub');
+    if (sub) {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.dataset.tab === sub) b.classList.add('active');
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.remove('active');
+        if (p.dataset.panel === sub) p.classList.add('active');
+      });
+    }
+  });
+</script>
+</body>
+</html>
