@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable — SLT Underground</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --orange: #E8650A;
+  --orange-light: #FF7A1A;
+  --orange-dark: #C4500A;
+  --black: #080808;
+  --black-mid: #111111;
+  --black-card: #161616;
+  --black-border: #222222;
+  --white: #F0EDE6;
+  --white-dim: #B8B5AF;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  --nav-width: 300px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
+::selection { background: var(--orange); color: var(--black); }
+a { color: inherit; text-decoration: none; }
+
+/* NAV OVERLAY */
+.nav-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(8,8,8,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 998; opacity: 0; pointer-events: none;
+  transition: opacity var(--transition);
+}
+.nav-overlay.active { opacity: 1; pointer-events: all; }
+
+/* SIDE NAV */
+.side-nav {
+  position: fixed; top: 0; left: calc(-1 * var(--nav-width));
+  width: var(--nav-width); height: 100vh;
+  background: var(--black-mid);
+  border-right: 1px solid var(--black-border);
+  z-index: 999; transition: left var(--transition);
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.side-nav.open { left: 0; }
+.nav-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--black-border); }
+.nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; color: var(--orange); letter-spacing: -0.02em; }
+.nav-logo span { color: var(--white); }
+.nav-close {
+  position: absolute; top: 18px; right: 16px;
+  background: none; border: none; color: var(--white-dim);
+  font-size: 1.4rem; cursor: pointer; line-height: 1;
+  transition: color var(--transition);
+}
+.nav-close:hover { color: var(--orange); }
+.nav-list { list-style: none; padding: 12px 0; flex: 1; }
+.nav-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
+.nav-link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px;
+  font-family: var(--font-body); font-weight: 500; font-size: 0.88rem;
+  color: var(--white-dim); cursor: pointer;
+  transition: all var(--transition); letter-spacing: 0.01em;
+}
+.nav-link:hover, .nav-link.active { color: var(--white); background: rgba(232,101,10,0.08); }
+.nav-link .nav-icon { font-size: 1rem; margin-right: 10px; }
+.nav-link .nav-arrow { font-size: 0.75rem; transition: transform var(--transition); }
+.nav-link.expanded .nav-arrow { transform: rotate(90deg); }
+.badge-new {
+  background: var(--orange); color: var(--black);
+  font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.05em; margin-left: 6px;
+}
+.sub-nav { display: none; list-style: none; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.04); }
+.sub-nav.open { display: block; }
+.sub-nav-link {
+  display: block; padding: 10px 20px 10px 44px; font-size: 0.82rem;
+  color: var(--white-dim); cursor: pointer;
+  transition: all var(--transition); border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.sub-nav-link:hover { color: var(--orange); background: rgba(232,101,10,0.05); }
+.nav-section-label {
+  padding: 14px 20px 6px;
+  font-family: var(--font-mono); font-size: 0.62rem;
+  color: rgba(240,237,230,0.3); letter-spacing: 0.15em; text-transform: uppercase;
+}
+.nav-footer {
+  padding: 16px 20px; border-top: 1px solid var(--black-border);
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 0.9rem;
+  color: var(--black); flex-shrink: 0;
+}
+.nav-founder-info p { font-family: var(--font-body); font-weight: 600; font-size: 0.8rem; color: var(--white); line-height: 1.2; }
+.nav-founder-info span { font-size: 0.72rem; color: var(--white-dim); }
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(8,8,8,0.9); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--black-border);
+}
+.hamburger {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; gap: 5px; padding: 4px;
+}
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: all var(--transition); }
+.hamburger:hover span { background: var(--orange); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--orange); letter-spacing: -0.02em; }
+.topbar-logo span { color: var(--white); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-ai-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--orange); color: var(--black); border: none;
+  padding: 7px 14px; border-radius: 6px;
+  font-family: var(--font-body); font-weight: 600; font-size: 0.78rem;
+  cursor: pointer; transition: all var(--transition); text-decoration: none;
+}
+.topbar-ai-btn:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+/* PAGE */
+.page-content { padding-top: 60px; min-height: 100vh; }
+.page-header {
+  padding: 50px 24px 36px;
+  background: linear-gradient(160deg, rgba(232,101,10,0.15) 0%, transparent 70%);
+  border-bottom: 1px solid var(--black-border); position: relative;
+}
+.page-header::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(232,101,10,0.07) 1px, transparent 1px);
+  background-size: 30px 30px; pointer-events: none;
+}
+.page-header .section-label { margin-bottom: 8px; }
+.page-header h1 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(1.6rem, 6vw, 2.6rem); letter-spacing: -0.03em;
+  color: var(--white); line-height: 1.15; margin-bottom: 10px;
+}
+.page-header p { font-size: 0.9rem; color: var(--white-dim); max-width: 500px; }
+.section-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+
+/* TABS */
+.tab-nav {
+  display: flex; gap: 0; border-bottom: 1px solid var(--black-border);
+  padding: 0 24px; overflow-x: auto;
+}
+.tab-btn {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--white-dim); padding: 14px 18px;
+  font-family: var(--font-body); font-weight: 500; font-size: 0.85rem;
+  cursor: pointer; white-space: nowrap; transition: all var(--transition);
+}
+.tab-btn:hover { color: var(--white); }
+.tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* TIMETABLE */
+.tt-scroll { overflow-x: auto; padding: 0 24px 24px; }
+table.tt {
+  border-collapse: collapse; min-width: 780px; width: 100%; font-size: 0.74rem;
+}
+table.tt th {
+  background: var(--orange); color: var(--black);
+  font-family: var(--font-mono); font-weight: 700;
+  padding: 10px 8px; text-align: center; font-size: 0.68rem; white-space: nowrap;
+}
+table.tt td {
+  border: 1px solid var(--black-border); padding: 8px 6px;
+  vertical-align: top; text-align: center;
+  background: var(--black-card); color: var(--white-dim); line-height: 1.5;
+}
+table.tt td.day {
+  background: rgba(232,101,10,0.12); color: var(--orange);
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem; white-space: nowrap;
+}
+table.tt td.occupied {
+  background: rgba(232,101,10,0.07); color: var(--white);
+  font-weight: 500; font-size: 0.72rem;
+}
+table.tt td.lab {
+  background: rgba(30,80,200,0.07); color: #8bb4ff; font-size: 0.72rem;
+}
+.tt-note { font-size: 0.8rem; color: var(--white-dim); padding: 16px 24px; line-height: 1.6; }
+.tt-note strong { color: var(--orange); }
+
+/* NOTE BLOCK */
+.note-block {
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: 12px; padding: 28px 24px; margin-bottom: 24px;
+}
+.note-block h2 {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;
+  color: var(--orange); margin-bottom: 16px; letter-spacing: -0.02em;
+  padding-bottom: 10px; border-bottom: 1px solid var(--black-border);
+}
+
+/* TABLE */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin: 16px 0; }
+.data-table th {
+  background: rgba(232,101,10,0.15); color: var(--orange);
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 10px 12px; text-align: left;
+  border-bottom: 1px solid var(--black-border);
+}
+.data-table td { padding: 9px 12px; color: var(--white-dim); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.data-table tr:hover td { background: rgba(232,101,10,0.04); color: var(--white); }
+
+/* LEGEND */
+.legend {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  padding: 0 24px 20px; font-size: 0.78rem;
+}
+.legend-item { display: flex; align-items: center; gap: 7px; color: var(--white-dim); }
+.legend-dot {
+  width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+}
+.legend-dot.lec  { background: rgba(232,101,10,0.4); }
+.legend-dot.lab  { background: rgba(30,80,200,0.4); border: 1px solid #8bb4ff; }
+.legend-dot.free { background: var(--black-card); border: 1px solid var(--black-border); }
+
+/* FOOTER */
+.site-footer {
+  background: var(--black-mid); border-top: 1px solid var(--black-border);
+  padding: 40px 24px 24px; margin-top: 60px;
+}
+.footer-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; color: var(--orange); margin-bottom: 8px; }
+.footer-tagline { font-size: 0.83rem; color: var(--white-dim); margin-bottom: 24px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+.footer-link { font-size: 0.8rem; color: var(--white-dim); transition: color var(--transition); text-decoration: none; }
+.footer-link:hover { color: var(--orange); }
+.footer-bottom {
+  border-top: 1px solid var(--black-border); padding-top: 20px;
+  font-family: var(--font-mono); font-size: 0.68rem; color: rgba(240,237,230,0.3);
+}
+.footer-bottom span { color: var(--orange); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
+<div class="nav-overlay"></div>
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="nav-logo">SLT <span>Underground</span></div>
+    <button class="nav-close">✕</button>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item">
+      <a class="nav-link" href="../index.html"><span><span class="nav-icon">🏠</span> Home</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/brochure.html"><span><span class="nav-icon">📋</span> SLT Brochure</span></a>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-pq">
+        <span><span class="nav-icon">📝</span> Past Questions</span>
+        <span class="nav-arrow">›</span>
+      </div>
+      <ul class="sub-nav" id="sub-pq">
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd1">ND1 Past Questions</a></li>
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd2">ND2 Past Questions</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-notes">
+        <span><span class="nav-icon">📚</span> ND2 Notes</span>
+        <span class="nav-arrow">›</span>
+      </div>
+      <ul class="sub-nav" id="sub-notes">
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stc211">STC 211 — Inorganic Chemistry</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stc212">STC 212 — Analytical Chemistry</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stp211">STP 211 — Electronics</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=micro">Microbiology — Control of Microorganisms</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=excel">Microsoft Excel for SLT</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stats">Research &amp; Statistics</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-reports">
+        <span><span class="nav-icon">🔬</span> ND2 Report Books</span>
+        <span class="nav-arrow">›</span>
+      </div>
+      <ul class="sub-nav" id="sub-reports">
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=biochem">Biochemistry (STC 222)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=genetics">Genetics (STB 221)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=ecology">Ecology (STB 222)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=maintenance">Maintenance &amp; Repair (STP 221)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=glassblowing">Glass Blowing (GLT 222)</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/gp-calculator.html"><span><span class="nav-icon">🎓</span> GP Calculator</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/prosper-ai.html"><span><span class="nav-icon">💎</span> Prosper AI <span class="badge-new">NEW</span></span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/about.html"><span><span class="nav-icon">👤</span> About the Founder</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="../pages/timetable.html"><span><span class="nav-icon">📅</span> Timetable</span></a>
+    </li>
+    <li class="nav-section-label">External</li>
+    <li class="nav-item">
+      <a class="nav-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank"><span><span class="nav-icon">🌐</span> School Portal</span></a>
+    </li>
+  </ul>
+  <div class="nav-footer">
+    <div class="nav-avatar">OP</div>
+    <div class="nav-founder-info">
+      <p>Prosperpeace</p>
+      <span>Founder — ND2 Class of 2026</span>
+    </div>
+  </div>
+</nav>
+
+<header class="topbar">
+  <button class="hamburger" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="topbar-logo">SLT <span>Underground</span></div>
+  <div class="topbar-right">
+    <a class="topbar-ai-btn" href="../pages/prosper-ai.html">💎 Prosper AI</a>
+  </div>
+</header>
+<!-- ═══════════════════════════════════════ END NAV ═══════════════════════════════════ -->
+
+<main class="page-content">
+
+  <div class="page-header">
+    <div class="section-label">Academic Calendar</div>
+    <h1>Timetable 📅</h1>
+    <p>Second Semester Tentative Timetable — 2025/2026 Session. Venue: Sewage Hall 2.</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-section">
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="nd1">ND1 Timetable</button>
+      <button class="tab-btn" data-tab="nd2">ND2 Timetable</button>
+    </nav>
+
+    <!-- ══ ND1 ══ -->
+    <div class="tab-panel active" data-panel="nd1">
+      <div class="tt-note">
+        <strong>ND1 (FT/DPP) — Second Semester 2025/2026.</strong>
+        Venue: Sewage Hall 2. This timetable is tentative and subject to change. L = Lecture, P = Practical.
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot lec"></div> Lecture</div>
+        <div class="legend-item"><div class="legend-dot lab"></div> Practical / Lab</div>
+        <div class="legend-item"><div class="legend-dot free"></div> Free Period</div>
+      </div>
+
+      <div class="tt-scroll">
+        <table class="tt">
+          <thead>
+            <tr>
+              <th>DAY</th>
+              <th>8–9</th>
+              <th>9–10</th>
+              <th>10–12</th>
+              <th>12–1</th>
+              <th>1–2</th>
+              <th>2–3</th>
+              <th>3–4</th>
+              <th>4–5</th>
+              <th>5–6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="day">MON</td>
+              <td class="occupied" colspan="2">STB 121 (L)</td>
+              <td class="occupied">STP 121 (L)</td>
+              <td class="lab" colspan="6">STP 122(P) / STC 121(P) — Physics Lab / Chemistry Lab</td>
+            </tr>
+            <tr>
+              <td class="day">TUE</td>
+              <td class="lab" colspan="3">STP 121(P) / STC 122(P) — Physics Lab / Chemistry Lab</td>
+              <td class="occupied" colspan="3">STC 122 (L)</td>
+              <td colspan="3">—</td>
+            </tr>
+            <tr>
+              <td class="day">WED</td>
+              <td class="occupied">STC 123 (L)</td>
+              <td class="occupied">STC 123 (L)</td>
+              <td class="occupied">STC 121</td>
+              <td colspan="6">—</td>
+            </tr>
+            <tr>
+              <td class="day">THU</td>
+              <td class="lab" colspan="3">GLT 121(P) / COM 123(P) — Biology Lab / Com Lab</td>
+              <td class="occupied" colspan="3">GLT 121 (L)</td>
+              <td class="occupied" colspan="2">GNS 102 (L)</td>
+              <td class="lab">EED 126(P) — VSESC Workshop</td>
+            </tr>
+            <tr>
+              <td class="day">FRI</td>
+              <td class="lab" colspan="3">STB 121(P) / STC 123(P) — Biology Lab / Chemistry Lab</td>
+              <td class="occupied" colspan="3">STP 122 (L)</td>
+              <td class="occupied" colspan="2">EED 126 (L)</td>
+              <td class="occupied" colspan="2">COM 123 (L)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="padding: 0 24px; margin-top: 20px;">
+        <div class="note-block">
+          <h2>ND1 Course Codes Reference</h2>
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Course</th><th>Type</th></tr></thead>
+            <tbody>
+              <tr><td>STB 121</td><td>General Biology I</td><td>Lecture + Practical</td></tr>
+              <tr><td>STC 121</td><td>General Chemistry I</td><td>Lecture + Practical</td></tr>
+              <tr><td>STC 122</td><td>General Chemistry II</td><td>Lecture + Practical</td></tr>
+              <tr><td>STC 123</td><td>Organic Chemistry I</td><td>Lecture + Practical</td></tr>
+              <tr><td>STP 121</td><td>General Physics I</td><td>Lecture + Practical</td></tr>
+              <tr><td>STP 122</td><td>General Physics II</td><td>Lecture + Practical</td></tr>
+              <tr><td>GLT 121</td><td>Introduction to GLT</td><td>Lecture + Practical</td></tr>
+              <tr><td>COM 123</td><td>Computer Applications</td><td>Lecture + Practical</td></tr>
+              <tr><td>GNS 102</td><td>Use of English</td><td>Lecture</td></tr>
+              <tr><td>EED 126</td><td>Entrepreneurship</td><td>Lecture + Practical (Workshop)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- end nd1 -->
+
+    <!-- ══ ND2 ══ -->
+    <div class="tab-panel" data-panel="nd2">
+      <div class="tt-note">
+        <strong>ND2 (FT/DPP) — Second Semester 2025/2026.</strong>
+        Venue: Sewage Hall 2. This timetable is tentative and subject to change. L = Lecture, P = Practical.
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot lec"></div> Lecture</div>
+        <div class="legend-item"><div class="legend-dot lab"></div> Practical / Lab</div>
+        <div class="legend-item"><div class="legend-dot free"></div> Free Period</div>
+      </div>
+
+      <div class="tt-scroll">
+        <table class="tt">
+          <thead>
+            <tr>
+              <th>DAY</th>
+              <th>8–9</th>
+              <th>9–10</th>
+              <th>10–11</th>
+              <th>11–12</th>
+              <th>12–1</th>
+              <th>1–2</th>
+              <th>2–3</th>
+              <th>3–4</th>
+              <th>4–5</th>
+              <th>5–6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="day">MON</td>
+              <td class="lab" colspan="4">STC 221(P) — Chemistry Lab</td>
+              <td colspan="2">—</td>
+              <td class="occupied" colspan="2">STC 221 (L) — SLT Lab</td>
+              <td class="occupied" colspan="2">GNS 121 (L)</td>
+            </tr>
+            <tr>
+              <td class="day">TUE</td>
+              <td class="occupied" colspan="2">GNS 202 (L)</td>
+              <td colspan="2">—</td>
+              <td class="lab" colspan="3">STB 221(P) / STB 222(P)</td>
+              <td class="occupied" colspan="2">STB 222 (L)</td>
+              <td class="occupied" colspan="2">STB 221 (L)</td>
+            </tr>
+            <tr>
+              <td class="day">WED</td>
+              <td class="occupied" colspan="2">GNS 113 (L) — SLT Lab</td>
+              <td colspan="2">—</td>
+              <td class="occupied" colspan="3">STC 222 (L)</td>
+              <td class="occupied" colspan="3">GLT 222 (L)</td>
+            </tr>
+            <tr>
+              <td class="day">THU</td>
+              <td colspan="4">—</td>
+              <td class="lab" colspan="4">GLT 222(P) / STC 222(P) — Glass Blowing Lab / Chemistry Lab</td>
+              <td class="lab" colspan="3">EED 226(P) — VSESC Workshop</td>
+            </tr>
+            <tr>
+              <td class="day">FRI</td>
+              <td class="lab" colspan="2">STP 221(P) — Physics Lab</td>
+              <td colspan="2">—</td>
+              <td class="occupied">EED 226 (L) — SLT Lab</td>
+              <td colspan="2">—</td>
+              <td class="occupied" colspan="4">STP 221 (L)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="padding: 0 24px; margin-top: 20px;">
+        <div class="note-block">
+          <h2>ND2 Course Codes Reference</h2>
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Course</th><th>Type</th></tr></thead>
+            <tbody>
+              <tr><td>STC 221</td><td>Analytical Chemistry</td><td>Lecture + Practical (Chem Lab)</td></tr>
+              <tr><td>STC 222</td><td>Biochemistry</td><td>Lecture + Practical (Chem Lab)</td></tr>
+              <tr><td>STB 221</td><td>Genetics</td><td>Lecture + Practical</td></tr>
+              <tr><td>STB 222</td><td>Ecology</td><td>Lecture + Practical</td></tr>
+              <tr><td>STP 221</td><td>Applied Physics / Maintenance &amp; Repair</td><td>Lecture + Practical (Physics Lab)</td></tr>
+              <tr><td>GLT 222</td><td>Glass Blowing and Vacuum Techniques</td><td>Lecture + Practical (Glass Blowing Lab)</td></tr>
+              <tr><td>GNS 202</td><td>General Studies II</td><td>Lecture</td></tr>
+              <tr><td>GNS 121</td><td>General Studies III</td><td>Lecture</td></tr>
+              <tr><td>GNS 113</td><td>General Studies</td><td>Lecture (SLT Lab)</td></tr>
+              <tr><td>EED 226</td><td>Entrepreneurship II</td><td>Lecture + Practical (Workshop)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- end nd2 -->
+
+  </div><!-- end tab-section -->
+
+</main>
+
+<!-- ═════════════════════════════════ FOOTER ════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-logo">SLT Underground</div>
+  <div class="footer-tagline">Everything an SLT student at Poly Ibadan needs. From your first day to graduation day.</div>
+  <div class="footer-links">
+    <a class="footer-link" href="../index.html">Home</a>
+    <a class="footer-link" href="../pages/brochure.html">SLT Brochure</a>
+    <a class="footer-link" href="../pages/past-questions.html">Past Questions</a>
+    <a class="footer-link" href="../pages/notes.html">ND2 Notes</a>
+    <a class="footer-link" href="../pages/report-books.html">Report Books</a>
+    <a class="footer-link" href="../pages/gp-calculator.html">GP Calculator</a>
+    <a class="footer-link" href="../pages/prosper-ai.html">Prosper AI</a>
+    <a class="footer-link" href="../pages/about.html">About</a>
+    <a class="footer-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank">School Portal</a>
+  </div>
+  <div class="footer-bottom">
+    Built by <span>Oyekanmi Prosperpeace Oluwajuwonlo</span> — ND2 Class of 2026 •
+    The Polytechnic Ibadan, Dept. of Science Laboratory Technology •
+    Free forever. Share freely. 💎
+  </div>
+</footer>
+
+<script>
+// ── NAV TOGGLE ──
+(function () {
+  const hamburger = document.querySelector('.hamburger');
+  const sideNav   = document.querySelector('.side-nav');
+  const overlay   = document.querySelector('.nav-overlay');
+  const closeBtn  = document.querySelector('.nav-close');
+
+  function openNav()  { sideNav.classList.add('open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeNav() { sideNav.classList.remove('open'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+  hamburger && hamburger.addEventListener('click', openNav);
+  closeBtn  && closeBtn.addEventListener('click', closeNav);
+  overlay   && overlay.addEventListener('click', closeNav);
+
+  // Sub-menus
+  document.querySelectorAll('.nav-link[data-sub]').forEach(link => {
+    link.addEventListener('click', () => {
+      const sub = document.getElementById(link.dataset.sub);
+      if (!sub) return;
+      const isOpen = sub.classList.toggle('open');
+      link.classList.toggle('expanded', isOpen);
+    });
+  });
+})();
+
+// ── TABS ──
+(function () {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target  = btn.dataset.tab;
+      const section = btn.closest('.tab-section') || document;
+      section.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      section.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = section.querySelector(`[data-panel="${target}"]`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+})();
+</script>
+</body>
+</html>
