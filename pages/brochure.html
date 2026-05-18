@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLT Brochure — SLT Underground</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --orange: #E8650A;
+  --orange-light: #FF7A1A;
+  --orange-dark: #C4500A;
+  --black: #080808;
+  --black-mid: #111111;
+  --black-card: #161616;
+  --black-border: #222222;
+  --white: #F0EDE6;
+  --white-dim: #B8B5AF;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  --nav-width: 300px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
+::selection { background: var(--orange); color: var(--black); }
+a { color: inherit; text-decoration: none; }
+
+/* NAV OVERLAY */
+.nav-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(8,8,8,0.7); backdrop-filter: blur(4px);
+  z-index: 998; opacity: 0; pointer-events: none;
+  transition: opacity var(--transition);
+}
+.nav-overlay.active { opacity: 1; pointer-events: all; }
+
+/* SIDE NAV */
+.side-nav {
+  position: fixed; top: 0; left: calc(-1 * var(--nav-width));
+  width: var(--nav-width); height: 100vh;
+  background: var(--black-mid); border-right: 1px solid var(--black-border);
+  z-index: 999; transition: left var(--transition);
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.side-nav.open { left: 0; }
+.nav-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--black-border); }
+.nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; color: var(--orange); letter-spacing: -0.02em; }
+.nav-logo span { color: var(--white); }
+.nav-close {
+  position: absolute; top: 18px; right: 16px;
+  background: none; border: none; color: var(--white-dim);
+  font-size: 1.4rem; cursor: pointer; line-height: 1; transition: color var(--transition);
+}
+.nav-close:hover { color: var(--orange); }
+.nav-list { list-style: none; padding: 12px 0; flex: 1; }
+.nav-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
+.nav-link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px; font-family: var(--font-body); font-weight: 500; font-size: 0.88rem;
+  color: var(--white-dim); cursor: pointer; transition: all var(--transition); letter-spacing: 0.01em;
+}
+.nav-link:hover, .nav-link.active { color: var(--white); background: rgba(232,101,10,0.08); }
+.nav-link .nav-icon { font-size: 1rem; margin-right: 10px; }
+.nav-link .nav-arrow { font-size: 0.75rem; transition: transform var(--transition); }
+.nav-link.expanded .nav-arrow { transform: rotate(90deg); }
+.badge-new {
+  background: var(--orange); color: var(--black);
+  font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.05em; margin-left: 6px;
+}
+.sub-nav { display: none; list-style: none; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.04); }
+.sub-nav.open { display: block; }
+.sub-nav-link {
+  display: block; padding: 10px 20px 10px 44px; font-size: 0.82rem;
+  color: var(--white-dim); cursor: pointer;
+  transition: all var(--transition); border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.sub-nav-link:hover { color: var(--orange); background: rgba(232,101,10,0.05); }
+.nav-section-label {
+  padding: 14px 20px 6px; font-family: var(--font-mono); font-size: 0.62rem;
+  color: rgba(240,237,230,0.3); letter-spacing: 0.15em; text-transform: uppercase;
+}
+.nav-footer {
+  padding: 16px 20px; border-top: 1px solid var(--black-border);
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 0.9rem;
+  color: var(--black); flex-shrink: 0;
+}
+.nav-founder-info p { font-family: var(--font-body); font-weight: 600; font-size: 0.8rem; color: var(--white); line-height: 1.2; }
+.nav-founder-info span { font-size: 0.72rem; color: var(--white-dim); }
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+  background: rgba(8,8,8,0.9); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--black-border);
+}
+.hamburger {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; gap: 5px; padding: 4px;
+}
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: all var(--transition); }
+.hamburger:hover span { background: var(--orange); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--orange); letter-spacing: -0.02em; }
+.topbar-logo span { color: var(--white); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-ai-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--orange); color: var(--black); border: none;
+  padding: 7px 14px; border-radius: 6px;
+  font-family: var(--font-body); font-weight: 600; font-size: 0.78rem;
+  cursor: pointer; transition: all var(--transition); text-decoration: none;
+}
+.topbar-ai-btn:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+/* PAGE */
+.page-content { padding-top: 60px; min-height: 100vh; }
+.page-header {
+  padding: 50px 24px 36px;
+  background: linear-gradient(160deg, rgba(232,101,10,0.15) 0%, transparent 70%);
+  border-bottom: 1px solid var(--black-border); position: relative;
+}
+.page-header::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(232,101,10,0.07) 1px, transparent 1px);
+  background-size: 30px 30px; pointer-events: none;
+}
+.page-header .section-label { margin-bottom: 8px; }
+.page-header h1 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(1.6rem, 6vw, 2.6rem); letter-spacing: -0.03em;
+  color: var(--white); line-height: 1.15; margin-bottom: 10px;
+}
+.page-header p { font-size: 0.9rem; color: var(--white-dim); max-width: 500px; }
+.section-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+
+/* BROCHURE HERO */
+.brochure-hero {
+  background: linear-gradient(135deg, rgba(232,101,10,0.18), rgba(232,101,10,0.05));
+  border: 1px solid rgba(232,101,10,0.3); border-radius: 14px;
+  padding: 28px 24px; margin-bottom: 20px; text-align: center;
+}
+.brochure-hero h2 {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.4rem;
+  color: var(--orange); margin-bottom: 10px;
+}
+.brochure-hero p { font-size: 0.88rem; color: var(--white-dim); max-width: 480px; margin: 0 auto; }
+
+/* TABS */
+.tab-nav {
+  display: flex; border-bottom: 1px solid var(--black-border);
+  padding: 0 24px; overflow-x: auto; gap: 0;
+}
+.tab-btn {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--white-dim); padding: 13px 14px;
+  font-family: var(--font-body); font-weight: 500; font-size: 0.82rem;
+  cursor: pointer; white-space: nowrap; transition: all var(--transition);
+}
+.tab-btn:hover { color: var(--white); }
+.tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+.tab-panel { display: none; padding: 24px; }
+.tab-panel.active { display: block; }
+
+/* NOTE BLOCK */
+.note-block {
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: 12px; padding: 24px; margin-bottom: 20px;
+}
+.note-block h2 {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
+  color: var(--orange); margin-bottom: 14px; letter-spacing: -0.02em;
+  padding-bottom: 10px; border-bottom: 1px solid var(--black-border);
+}
+.note-block h3 { font-family: var(--font-display); font-weight: 700; font-size: 0.92rem; color: var(--white); margin: 16px 0 10px; }
+.note-block p { color: var(--white-dim); font-size: 0.88rem; line-height: 1.85; margin-bottom: 10px; }
+.note-block ul, .note-block ol { padding-left: 20px; margin-bottom: 10px; }
+.note-block li { color: var(--white-dim); font-size: 0.87rem; line-height: 1.8; margin-bottom: 5px; }
+.note-block strong { color: var(--white); font-weight: 600; }
+
+/* SEMESTER HEADER BADGE */
+.sem-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(232,101,10,0.1); border: 1px solid rgba(232,101,10,0.3);
+  color: var(--orange); font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 20px; margin-bottom: 16px;
+}
+
+/* COURSE GRID */
+.course-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
+}
+.course-card {
+  background: var(--black); border: 1px solid var(--black-border);
+  border-radius: 10px; padding: 14px 16px;
+  display: flex; align-items: flex-start; gap: 12px;
+  transition: border-color var(--transition);
+}
+.course-card:hover { border-color: rgba(232,101,10,0.4); }
+.course-code {
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--orange);
+  letter-spacing: 0.06em; font-weight: 700; flex-shrink: 0;
+  background: rgba(232,101,10,0.1); padding: 3px 8px; border-radius: 4px;
+  margin-top: 2px;
+}
+.course-info .course-title { font-size: 0.85rem; color: var(--white); font-weight: 500; line-height: 1.4; margin-bottom: 3px; }
+.course-info .course-units { font-family: var(--font-mono); font-size: 0.65rem; color: var(--white-dim); }
+.course-info .course-type {
+  font-size: 0.7rem; color: var(--white-dim); margin-top: 3px;
+  display: flex; align-items: center; gap: 4px;
+}
+.tag-l, .tag-p, .tag-c, .tag-e, .tag-g {
+  font-size: 0.62rem; font-family: var(--font-mono);
+  padding: 1px 6px; border-radius: 3px; font-weight: 700;
+}
+.tag-l { background: rgba(232,101,10,0.15); color: var(--orange); }
+.tag-p { background: rgba(30,80,200,0.15); color: #8bb4ff; }
+.tag-c { background: rgba(232,101,10,0.15); color: var(--orange); }
+.tag-e { background: rgba(100,180,100,0.15); color: #7dca7d; }
+.tag-g { background: rgba(160,120,240,0.15); color: #b59ef5; }
+
+/* UNITS SUMMARY */
+.units-row {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 20px;
+}
+.unit-chip {
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: 8px; padding: 8px 16px; font-size: 0.8rem;
+  color: var(--white-dim); display: flex; flex-direction: column; align-items: center;
+}
+.unit-chip strong { font-family: var(--font-display); font-size: 1.2rem; color: var(--orange); }
+
+/* CAREER GRID */
+.career-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.career-item {
+  background: var(--black); border: 1px solid var(--black-border);
+  border-radius: 10px; padding: 14px 16px;
+  display: flex; align-items: flex-start; gap: 10px;
+  transition: border-color var(--transition);
+}
+.career-item:hover { border-color: rgba(232,101,10,0.35); }
+.career-item .ci-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+.career-item .ci-title { font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--white); margin-bottom: 3px; }
+.career-item .ci-sub { font-size: 0.75rem; color: var(--white-dim); line-height: 1.5; }
+
+/* DATA TABLE */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin: 14px 0; }
+.data-table th {
+  background: rgba(232,101,10,0.15); color: var(--orange);
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 10px 12px; text-align: left;
+  border-bottom: 1px solid var(--black-border);
+}
+.data-table td { padding: 9px 12px; color: var(--white-dim); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.data-table tr:hover td { background: rgba(232,101,10,0.04); color: var(--white); }
+
+/* FOOTER */
+.site-footer {
+  background: var(--black-mid); border-top: 1px solid var(--black-border);
+  padding: 40px 24px 24px; margin-top: 60px;
+}
+.footer-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; color: var(--orange); margin-bottom: 8px; }
+.footer-tagline { font-size: 0.83rem; color: var(--white-dim); margin-bottom: 24px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+.footer-link { font-size: 0.8rem; color: var(--white-dim); transition: color var(--transition); text-decoration: none; }
+.footer-link:hover { color: var(--orange); }
+.footer-bottom {
+  border-top: 1px solid var(--black-border); padding-top: 20px;
+  font-family: var(--font-mono); font-size: 0.68rem; color: rgba(240,237,230,0.3);
+}
+.footer-bottom span { color: var(--orange); }
+
+/* ABOUT CARD WRAPPER */
+.about-card { max-width: 860px; margin: 0 auto; padding: 24px 24px 60px; }
+
+@media (max-width: 520px) {
+  .course-grid { grid-template-columns: 1fr; }
+  .career-grid { grid-template-columns: 1fr; }
+  .tab-btn { padding: 12px 10px; font-size: 0.76rem; }
+}
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
+<div class="nav-overlay"></div>
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="nav-logo">SLT <span>Underground</span></div>
+    <button class="nav-close">✕</button>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item">
+      <a class="nav-link" href="../index.html"><span><span class="nav-icon">🏠</span> Home</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="../pages/brochure.html"><span><span class="nav-icon">📋</span> SLT Brochure</span></a>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-pq">
+        <span><span class="nav-icon">📝</span> Past Questions</span>
+        <span class="nav-arrow">›</span>
+      </div>
+      <ul class="sub-nav" id="sub-pq">
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd1">ND1 Past Questions</a></li>
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd2">ND2 Past Questions</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-notes">
+        <span><span class="nav-icon">📚</span> ND2 Notes</span>
+        <span class="nav-arrow">›</span>
+      </div>
+      <ul class="sub-nav" id="sub-notes">
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stc211">STC 211 — Inorganic Chemistry</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stc212">STC 212 — Analytical Chemistry</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stp211">STP 211 — Electronics</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=micro">Microbiology — Control of Microorganisms</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=excel">Microsoft Excel for SLT</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?course=stats">Research &amp; Statistics</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-reports">
+        <span><span class="nav-icon">🔬</span> ND2 Report Books</span>
+        <span class="nav-arrow">›</span>
+      </div>
+      <ul class="sub-nav" id="sub-reports">
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=biochem">Biochemistry (STC 222)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=genetics">Genetics (STB 221)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=ecology">Ecology (STB 222)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=maintenance">Maintenance &amp; Repair (STP 221)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=glassblowing">Glass Blowing (GLT 222)</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/gp-calculator.html"><span><span class="nav-icon">🎓</span> GP Calculator</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/prosper-ai.html"><span><span class="nav-icon">💎</span> Prosper AI <span class="badge-new">NEW</span></span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/about.html"><span><span class="nav-icon">👤</span> About the Founder</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../pages/timetable.html"><span><span class="nav-icon">📅</span> Timetable</span></a>
+    </li>
+    <li class="nav-section-label">External</li>
+    <li class="nav-item">
+      <a class="nav-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank"><span><span class="nav-icon">🌐</span> School Portal</span></a>
+    </li>
+  </ul>
+  <div class="nav-footer">
+    <div class="nav-avatar">OP</div>
+    <div class="nav-founder-info">
+      <p>Prosperpeace</p>
+      <span>Founder — ND2 Class of 2026</span>
+    </div>
+  </div>
+</nav>
+
+<header class="topbar">
+  <button class="hamburger" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="topbar-logo">SLT <span>Underground</span></div>
+  <div class="topbar-right">
+    <a class="topbar-ai-btn" href="../pages/prosper-ai.html">💎 Prosper AI</a>
+  </div>
+</header>
+<!-- ═══════════════════════════════════════ END NAV ═══════════════════════════════════ -->
+
+<main class="page-content">
+
+  <div class="page-header">
+    <div class="section-label">Department Info</div>
+    <h1>SLT Brochure 📋</h1>
+    <p>Everything you need to know about Science Laboratory Technology at The Polytechnic Ibadan — all four semesters, career paths, grading, and more.</p>
+  </div>
+
+  <div class="about-card">
+
+    <div class="brochure-hero">
+      <h2>Science Laboratory Technology</h2>
+      <p>Department of Science Laboratory Technology · Faculty of Science · The Polytechnic Ibadan. A two-year National Diploma programme training the next generation of laboratory scientists.</p>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         COURSE TABS — 4 SEMESTERS
+    ══════════════════════════════════════════ -->
+    <div class="tab-section" style="background:var(--black-card);border:1px solid var(--black-border);border-radius:14px;margin-bottom:20px;overflow:hidden">
+      <nav class="tab-nav" style="padding:0 16px;background:rgba(0,0,0,0.3)">
+        <button class="tab-btn active" data-tab="nd1s1">ND1 — Sem 1</button>
+        <button class="tab-btn" data-tab="nd1s2">ND1 — Sem 2</button>
+        <button class="tab-btn" data-tab="nd2s1">ND2 — Sem 1</button>
+        <button class="tab-btn" data-tab="nd2s2">ND2 — Sem 2</button>
+      </nav>
+
+      <!-- ══ ND1 SEMESTER 1 ══ -->
+      <div class="tab-panel active" data-panel="nd1s1">
+        <div class="sem-badge">📅 ND1 — First Semester &nbsp;|&nbsp; Total: 26 Units &nbsp;|&nbsp; Core: 15 · Elective: 9 · GNS: 2</div>
+        <div class="course-grid">
+          <div class="course-card">
+            <div class="course-code">STB 111</div>
+            <div class="course-info">
+              <div class="course-title">Plant and Animal Taxonomy</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STB 112</div>
+            <div class="course-info">
+              <div class="course-title">Morphology and Physiology of Living Things</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 111</div>
+            <div class="course-info">
+              <div class="course-title">General Principles of Chemistry</div>
+              <div class="course-type"><span class="tag-e">E</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 112</div>
+            <div class="course-info">
+              <div class="course-title">Inorganic Chemistry I</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 111</div>
+            <div class="course-info">
+              <div class="course-title">Mechanics</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 112</div>
+            <div class="course-info">
+              <div class="course-title">Heat Energy</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 113</div>
+            <div class="course-info">
+              <div class="course-title">Electronic Logic for Science</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GLT 111</div>
+            <div class="course-info">
+              <div class="course-title">General Laboratory Techniques I</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">MTH 113</div>
+            <div class="course-info">
+              <div class="course-title">Algebra for Science</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 101</div>
+            <div class="course-info">
+              <div class="course-title">Use of English I</div>
+              <div class="course-type"><span class="tag-g">G</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 111</div>
+            <div class="course-info">
+              <div class="course-title">Citizenship Education</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 106</div>
+            <div class="course-info">
+              <div class="course-title">Introduction to Psychometric Study</div>
+              <div class="course-type"><span class="tag-c">C</span> 0.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">LIB 111</div>
+            <div class="course-info">
+              <div class="course-title">Use of Library</div>
+              <div class="course-type"><span class="tag-c">C</span> 1.0 Unit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ND1 SEMESTER 2 ══ -->
+      <div class="tab-panel" data-panel="nd1s2">
+        <div class="sem-badge">📅 ND1 — Second Semester &nbsp;|&nbsp; Total: 24 Units &nbsp;|&nbsp; Core: 18 · Elective: 4 · GNS: 2</div>
+        <div class="course-grid">
+          <div class="course-card">
+            <div class="course-code">STB 121</div>
+            <div class="course-info">
+              <div class="course-title">Cell Biology</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 121</div>
+            <div class="course-info">
+              <div class="course-title">Organic Chemistry</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 122</div>
+            <div class="course-info">
+              <div class="course-title">Physical Chemistry</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 123</div>
+            <div class="course-info">
+              <div class="course-title">Analytical Chemistry</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 121</div>
+            <div class="course-info">
+              <div class="course-title">Electricity and Magnetism</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 122</div>
+            <div class="course-info">
+              <div class="course-title">Optics and Waves</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">COM 123</div>
+            <div class="course-info">
+              <div class="course-title">Computer Packages I</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 102</div>
+            <div class="course-info">
+              <div class="course-title">Communication in English I</div>
+              <div class="course-type"><span class="tag-g">G</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GLT 121</div>
+            <div class="course-info">
+              <div class="course-title">General Laboratory Techniques II</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">PTD 121</div>
+            <div class="course-info">
+              <div class="course-title">Technical Drawing and Workshop Practice</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">EED 126</div>
+            <div class="course-info">
+              <div class="course-title">Introduction to Entrepreneurship</div>
+              <div class="course-type"><span class="tag-c">C</span> 1.0 Unit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ND2 SEMESTER 1 ══ -->
+      <div class="tab-panel" data-panel="nd2s1">
+        <div class="sem-badge">📅 ND2 — First Semester &nbsp;|&nbsp; Total: 26 Units &nbsp;|&nbsp; Core: 16 · Elective: 8 · GNS: 2</div>
+        <div class="course-grid">
+          <div class="course-card">
+            <div class="course-code">STB 211</div>
+            <div class="course-info">
+              <div class="course-title">Pest and Pest Control</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STB 212</div>
+            <div class="course-info">
+              <div class="course-title">Palicilogy</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STM 211</div>
+            <div class="course-info">
+              <div class="course-title">Introduction to Microbiology</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 211</div>
+            <div class="course-info">
+              <div class="course-title">Inorganic Chemistry II</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 212</div>
+            <div class="course-info">
+              <div class="course-title">Instrumental and Analytical Chemistry</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 211</div>
+            <div class="course-info">
+              <div class="course-title">Electronics</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 213</div>
+            <div class="course-info">
+              <div class="course-title">Thermodynamics and Electromagnetism</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">MTH 213</div>
+            <div class="course-info">
+              <div class="course-title">Calculus for Science</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 201</div>
+            <div class="course-info">
+              <div class="course-title">Use of English</div>
+              <div class="course-type"><span class="tag-g">G</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">COM 215</div>
+            <div class="course-info">
+              <div class="course-title">Computer Packages II</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 206</div>
+            <div class="course-info">
+              <div class="course-title">Introduction to Psychometric Study</div>
+              <div class="course-type"><span class="tag-c">C</span> 1.0 Unit</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">SLT 212</div>
+            <div class="course-info">
+              <div class="course-title">Seminar</div>
+              <div class="course-type"><span class="tag-c">C</span> 1.0 Unit</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">SLT 211</div>
+            <div class="course-info">
+              <div class="course-title">Research Methodology</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">SLT 213</div>
+            <div class="course-info">
+              <div class="course-title">SIWES</div>
+              <div class="course-type"><span class="tag-c">C</span> —</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ND2 SEMESTER 2 ══ -->
+      <div class="tab-panel" data-panel="nd2s2">
+        <div class="sem-badge">📅 ND2 — Second Semester &nbsp;|&nbsp; Total: 25 Units &nbsp;|&nbsp; Core: 12 · Elective: 11 · GNS: 2</div>
+        <div class="course-grid">
+          <div class="course-card">
+            <div class="course-code">GLT 222</div>
+            <div class="course-info">
+              <div class="course-title">General Laboratory Techniques IV</div>
+              <div class="course-type"><span class="tag-c">C</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">SLT 222</div>
+            <div class="course-info">
+              <div class="course-title">Project</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 221</div>
+            <div class="course-info">
+              <div class="course-title">Organic Chemistry II</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STC 222</div>
+            <div class="course-info">
+              <div class="course-title">Biochemistry</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STP 221</div>
+            <div class="course-info">
+              <div class="course-title">Maintenance and Repairs of Scientific and Electrical Equipment</div>
+              <div class="course-type"><span class="tag-c">C</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">EED 226</div>
+            <div class="course-info">
+              <div class="course-title">Practices of Entrepreneurship</div>
+              <div class="course-type"><span class="tag-c">C</span> 1.5 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STB 221</div>
+            <div class="course-info">
+              <div class="course-title">Genetics</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">STB 222</div>
+            <div class="course-info">
+              <div class="course-title">Ecology</div>
+              <div class="course-type"><span class="tag-e">E</span> 3.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 113</div>
+            <div class="course-info">
+              <div class="course-title">Industrial Management</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 121</div>
+            <div class="course-info">
+              <div class="course-title">Citizenship Education II</div>
+              <div class="course-type"><span class="tag-e">E</span> 2.0 Units</div>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-code">GNS 202</div>
+            <div class="course-info">
+              <div class="course-title">Communication in English II</div>
+              <div class="course-type"><span class="tag-g">G</span> 2.0 Units</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end semester tabs -->
+
+    <!-- ══ GRADUATION REQUIREMENT ══ -->
+    <div class="note-block" style="border-left: 3px solid var(--orange);">
+      <h2>Graduation Requirement</h2>
+      <p>To be awarded the National Diploma in Science Laboratory Technology, a student must accumulate the required number of units across all four semesters as follows:</p>
+
+      <table class="data-table" style="margin-top:14px">
+        <thead>
+          <tr><th>Semester</th><th>Core</th><th>Elective</th><th>GNS</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ND1 — 1st Semester</td><td>15</td><td>9</td><td>2</td><td>26</td></tr>
+          <tr><td>ND1 — 2nd Semester</td><td>18</td><td>4</td><td>2</td><td>24</td></tr>
+          <tr><td>ND2 — 1st Semester</td><td>16</td><td>8</td><td>2</td><td>26</td></tr>
+          <tr><td>ND2 — 2nd Semester</td><td>12</td><td>11</td><td>2</td><td>25</td></tr>
+          <tr style="font-weight:700">
+            <td><strong>TOTAL</strong></td>
+            <td><strong>61</strong></td>
+            <td><strong>32</strong></td>
+            <td><strong>8</strong></td>
+            <td><strong>101</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:10px">
+        <div style="background:rgba(232,101,10,0.08);border:1px solid rgba(232,101,10,0.25);border-radius:10px;padding:14px 18px;flex:1;min-width:140px;text-align:center">
+          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--orange)">61</div>
+          <div style="font-size:0.75rem;color:var(--white-dim);margin-top:2px">Core Units Required</div>
+        </div>
+        <div style="background:rgba(100,180,100,0.08);border:1px solid rgba(100,180,100,0.25);border-radius:10px;padding:14px 18px;flex:1;min-width:140px;text-align:center">
+          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:#7dca7d">21</div>
+          <div style="font-size:0.75rem;color:var(--white-dim);margin-top:2px">Elective Units Required</div>
+        </div>
+        <div style="background:rgba(160,120,240,0.08);border:1px solid rgba(160,120,240,0.25);border-radius:10px;padding:14px 18px;flex:1;min-width:140px;text-align:center">
+          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:#b59ef5">4</div>
+          <div style="font-size:0.75rem;color:var(--white-dim);margin-top:2px">GNS Units Required</div>
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:0.84rem;color:var(--white-dim)">
+        Graduation Requirement: <strong style="color:var(--white)">Core — 61 &nbsp;|&nbsp; Elective — 21 &nbsp;|&nbsp; GNS — 4</strong>. Successful completion of SIWES is also compulsory for the award of the National Diploma.
+      </p>
+    </div>
+
+    <!-- ══ ABOUT PROGRAMME ══ -->
+    <div class="note-block">
+      <h2>About the Programme</h2>
+      <p>Science Laboratory Technology (SLT) is a National Diploma programme accredited by the National Board for Technical Education (NBTE). At The Polytechnic Ibadan, the programme runs under the Faculty of Science and admits students through JAMB and direct entry routes.</p>
+      <p>The programme blends theoretical study with heavy laboratory practice. Students spend significant time in chemistry labs, biology labs, physics labs, and specialized SLT labs. The goal is to produce competent laboratory technologists who can work in any scientific setting.</p>
+      <p>The programme runs for two years (four semesters) leading to a National Diploma (ND). Strong CGPA graduates may proceed to Higher National Diploma (HND) or degree programmes in related fields.</p>
+
+      <h3>SIWES</h3>
+      <p>Students are required to undergo the Students' Industrial Work Experience Scheme (SIWES) — a period of industrial attachment in relevant industries and laboratories. SIWES is compulsory for the award of the National Diploma.</p>
+
+      <h3>Attendance Requirement</h3>
+      <p>Students must attend at least <strong>70%</strong> of lectures and practical sessions per semester. Failure to meet this disqualifies a student from sitting exams in the affected course(s).</p>
+    </div>
+
+    <!-- ══ GRADING ══ -->
+    <div class="note-block">
+      <h2>Grading Scale</h2>
+      <p>The Polytechnic Ibadan uses its own grading scale. Know your numbers:</p>
+      <table class="data-table">
+        <thead><tr><th>Score</th><th>Grade</th><th>GP</th><th>CGPA Band</th><th>Diploma Class</th></tr></thead>
+        <tbody>
+          <tr><td>75 – 100</td><td>A</td><td>4.00</td><td>3.50 – 4.00</td><td><strong>Distinction 🏆</strong></td></tr>
+          <tr><td>70 – 74</td><td>AB</td><td>3.50</td><td>3.00 – 3.49</td><td>Upper Credit ⭐</td></tr>
+          <tr><td>65 – 69</td><td>B</td><td>3.25</td><td>2.50 – 2.99</td><td>Lower Credit ✅</td></tr>
+          <tr><td>60 – 64</td><td>BC</td><td>3.00</td><td>2.00 – 2.49</td><td>Pass</td></tr>
+          <tr><td>55 – 59</td><td>C</td><td>2.75</td><td>—</td><td>—</td></tr>
+          <tr><td>50 – 54</td><td>CD</td><td>2.50</td><td>—</td><td>—</td></tr>
+          <tr><td>45 – 49</td><td>D</td><td>2.25</td><td>—</td><td>—</td></tr>
+          <tr><td>40 – 44</td><td>DE</td><td>2.00</td><td>—</td><td>—</td></tr>
+          <tr><td>0 – 39</td><td>F</td><td>0.00</td><td>—</td><td>Failure ❌</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px">Use the <a href="../pages/gp-calculator.html" style="color:var(--orange);text-decoration:underline">GP Calculator</a> to track your CGPA at any time.</p>
+    </div>
+
+    <!-- ══ CAREER ══ -->
+    <div class="note-block">
+      <h2>Career Opportunities</h2>
+      <p>SLT graduates are in demand across many sectors. Here are the major career paths:</p>
+      <div class="career-grid">
+        <div class="career-item">
+          <div class="ci-icon">🏥</div>
+          <div><div class="ci-title">Hospital Laboratories</div><div class="ci-sub">Medical lab technologist, haematology, microbiology, pathology labs</div></div>
+        </div>
+        <div class="career-item">
+          <div class="ci-icon">💊</div>
+          <div><div class="ci-title">Pharmaceutical Industry</div><div class="ci-sub">Quality control, drug manufacturing, pharmaceutical laboratories</div></div>
+        </div>
+        <div class="career-item">
+          <div class="ci-icon">🔬</div>
+          <div><div class="ci-title">Research Institutions</div><div class="ci-sub">NAFDAC, PRODA, research institutes, university laboratories</div></div>
+        </div>
+        <div class="career-item">
+          <div class="ci-icon">🏭</div>
+          <div><div class="ci-title">Food &amp; Beverage</div><div class="ci-sub">Food safety testing, quality assurance, production labs</div></div>
+        </div>
+        <div class="career-item">
+          <div class="ci-icon">⛽</div>
+          <div><div class="ci-title">Petroleum Industry</div><div class="ci-sub">NNPC, oil servicing companies, chemical analysis</div></div>
+        </div>
+        <div class="career-item">
+          <div class="ci-icon">🌿</div>
+          <div><div class="ci-title">Environmental Labs</div><div class="ci-sub">Water quality testing, environmental monitoring agencies</div></div>
+        </div>
+        <div class="career-item">
+          <div class="ci-icon">🎓</div>
+          <div><div class="ci-title">Education</div><div class="ci-sub">Lab technician in schools, polytechnics and universities</div></div>
+        </div>
+        <div class="career-item">
+          <div class="ci-icon">🏛️</div>
+          <div><div class="ci-title">Government Agencies</div><div class="ci-sub">Standards Organisation of Nigeria (SON), NAFDAC, DPR</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ADMISSION ══ -->
+    <div class="note-block">
+      <h2>Admission Requirements</h2>
+      <ul>
+        <li>Five O'Level credits including Mathematics, English Language, Chemistry, Biology or Physics and any other Science subject.</li>
+        <li>Credits must be obtained in not more than two sittings.</li>
+        <li>JAMB score meeting The Polytechnic Ibadan's cut-off mark for SLT.</li>
+        <li>Pass Post-UTME screening (if applicable).</li>
+      </ul>
+    </div>
+
+    <!-- ══ ABOUT POLY ══ -->
+    <div class="note-block">
+      <h2>The Polytechnic Ibadan</h2>
+      <p>The Polytechnic Ibadan was established in 1970. It is one of Nigeria's oldest polytechnics, located in Ibadan, the capital of Oyo State. The institution is governed by the NBTE and runs a wide range of ND and HND programmes.</p>
+      <p><strong>Faculty of Science</strong> houses the Department of Science Laboratory Technology. The faculty is known for its practical, hands-on approach to science education.</p>
+      <p>School Portal: <a href="https://schooltry.polyibadan.edu.ng/student" target="_blank" style="color:var(--orange)">schooltry.polyibadan.edu.ng/student</a></p>
+    </div>
+
+  </div><!-- end about-card -->
+
+</main>
+
+<!-- ═════════════════════════════════ FOOTER ════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-logo">SLT Underground</div>
+  <div class="footer-tagline">Everything an SLT student at Poly Ibadan needs. From your first day to graduation day.</div>
+  <div class="footer-links">
+    <a class="footer-link" href="../index.html">Home</a>
+    <a class="footer-link" href="../pages/brochure.html">SLT Brochure</a>
+    <a class="footer-link" href="../pages/past-questions.html">Past Questions</a>
+    <a class="footer-link" href="../pages/notes.html">ND2 Notes</a>
+    <a class="footer-link" href="../pages/report-books.html">Report Books</a>
+    <a class="footer-link" href="../pages/gp-calculator.html">GP Calculator</a>
+    <a class="footer-link" href="../pages/prosper-ai.html">Prosper AI</a>
+    <a class="footer-link" href="../pages/about.html">About</a>
+    <a class="footer-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank">School Portal</a>
+  </div>
+  <div class="footer-bottom">
+    Built by <span>Oyekanmi Prosperpeace Oluwajuwonlo</span> — ND2 Class of 2026 •
+    The Polytechnic Ibadan, Dept. of Science Laboratory Technology •
+    Free forever. Share freely. 💎
+  </div>
+</footer>
+
+<script>
+// ── NAV TOGGLE ──
+(function () {
+  const hamburger = document.querySelector('.hamburger');
+  const sideNav   = document.querySelector('.side-nav');
+  const overlay   = document.querySelector('.nav-overlay');
+  const closeBtn  = document.querySelector('.nav-close');
+
+  function openNav()  { sideNav.classList.add('open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeNav() { sideNav.classList.remove('open'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+  hamburger && hamburger.addEventListener('click', openNav);
+  closeBtn  && closeBtn.addEventListener('click', closeNav);
+  overlay   && overlay.addEventListener('click', closeNav);
+
+  document.querySelectorAll('.nav-link[data-sub]').forEach(link => {
+    link.addEventListener('click', () => {
+      const sub = document.getElementById(link.dataset.sub);
+      if (!sub) return;
+      const isOpen = sub.classList.toggle('open');
+      link.classList.toggle('expanded', isOpen);
+    });
+  });
+})();
+
+// ── TABS ──
+(function () {
+  document.querySelectorAll('.tab-section').forEach(section => {
+    section.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        section.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        section.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const panel = section.querySelector(`[data-panel="${target}"]`);
+        if (panel) panel.classList.add('active');
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
