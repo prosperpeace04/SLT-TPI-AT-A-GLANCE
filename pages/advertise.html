@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advertise — SLT.TPI At A Glance</title>
+  <!-- PWA -->
+  <link rel="manifest" href="/SLT-TPI-AT-A-GLANCE/manifest.json">
+  <meta name="theme-color" content="#E8650A">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SLT.TPI">
+  <link rel="apple-touch-icon" href="/SLT-TPI-AT-A-GLANCE/Icon/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/SLT-TPI-AT-A-GLANCE/Icon/icon-192.png">
+  <script>if("serviceWorker"in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/SLT-TPI-AT-A-GLANCE/sw.js");});}</script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --orange:#E8650A;--orange-light:#FF7A1A;--orange-dark:#C4500A;
+  --black:#080808;--black-mid:#111111;--black-card:#161616;--black-border:#222222;
+  --white:#F0EDE6;--white-dim:#B8B5AF;
+  --font-display:'Syne',sans-serif;--font-mono:'Space Mono',monospace;--font-body:'DM Sans',sans-serif;
+  --nav-width:300px;--transition:0.3s cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);line-height:1.7;overflow-x:hidden;min-height:100vh;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px;}
+::selection{background:var(--orange);color:var(--black);}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav-overlay{position:fixed;inset:0;background:rgba(8,8,8,0.7);backdrop-filter:blur(4px);z-index:998;opacity:0;pointer-events:none;transition:opacity var(--transition);}
+.nav-overlay.active{opacity:1;pointer-events:all;}
+.side-nav{position:fixed;top:0;left:calc(-1 * var(--nav-width));width:var(--nav-width);height:100vh;background:var(--black-mid);border-right:1px solid var(--black-border);z-index:999;transition:left var(--transition);display:flex;flex-direction:column;overflow-y:auto;}
+.side-nav.open{left:0;}
+.nav-header{padding:24px 20px 16px;border-bottom:1px solid var(--black-border);}
+.nav-logo{font-family:var(--font-display);font-weight:800;font-size:1.1rem;color:var(--orange);}
+.nav-logo span{color:var(--white);}
+.nav-close{position:absolute;top:18px;right:16px;background:none;border:none;color:var(--white-dim);font-size:1.4rem;cursor:pointer;}
+.nav-close:hover{color:var(--orange);}
+.nav-list{list-style:none;padding:12px 0;flex:1;}
+.nav-item{border-bottom:1px solid rgba(255,255,255,0.04);}
+.nav-link{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;font-family:var(--font-body);font-weight:500;font-size:0.88rem;color:var(--white-dim);cursor:pointer;transition:all var(--transition);}
+.nav-link:hover,.nav-link.active{color:var(--white);background:rgba(232,101,10,0.08);}
+.nav-icon{font-size:1rem;margin-right:10px;}
+.nav-arrow{font-size:0.75rem;transition:transform var(--transition);}
+.nav-link.expanded .nav-arrow{transform:rotate(90deg);}
+.sub-nav{display:none;list-style:none;background:rgba(0,0,0,0.3);}
+.sub-nav.open{display:block;}
+.sub-nav-link{display:block;padding:10px 20px 10px 44px;font-size:0.82rem;color:var(--white-dim);cursor:pointer;transition:all var(--transition);}
+.sub-nav-link:hover,.sub-nav-link.active{color:var(--orange);}
+.nav-section-label{padding:14px 20px 6px;font-family:var(--font-mono);font-size:0.62rem;color:rgba(240,237,230,0.3);letter-spacing:0.15em;text-transform:uppercase;}
+.nav-footer{padding:16px 20px;border-top:1px solid var(--black-border);display:flex;align-items:center;gap:12px;}
+.nav-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dark));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:0.9rem;color:var(--black);flex-shrink:0;}
+.nav-founder-info p{font-weight:600;font-size:0.8rem;color:var(--white);line-height:1.2;}
+.nav-founder-info span{font-size:0.72rem;color:var(--white-dim);}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--black-border);}
+.hamburger{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:4px;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--white);border-radius:2px;transition:all var(--transition);}
+.hamburger:hover span{background:var(--orange);}
+.topbar-logo{font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--orange);}
+.topbar-logo span{color:var(--white);}
+
+/* PAGE */
+.page-content{padding-top:60px;min-height:100vh;}
+
+/* TAB SWITCH */
+.tab-switch{display:flex;gap:0;max-width:420px;margin:16px auto 0;padding:0 24px;}
+.tab-btn{flex:1;background:var(--black-card);border:1px solid var(--black-border);color:var(--white-dim);font-family:var(--font-display);font-weight:700;font-size:0.85rem;padding:12px 10px;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:6px;}
+.tab-btn:first-child{border-radius:10px 0 0 10px;border-right:none;}
+.tab-btn:last-child{border-radius:0 10px 10px 0;}
+.tab-btn.active{background:var(--orange);border-color:var(--orange);color:var(--black);}
+.tab-btn:not(.active):hover{color:var(--white);}
+
+/* HERO */
+.adv-hero{padding:32px 24px 40px;background:linear-gradient(160deg,rgba(232,101,10,0.2) 0%,transparent 70%);border-bottom:1px solid var(--black-border);text-align:center;position:relative;}
+.adv-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(232,101,10,0.07) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;}
+.adv-hero-badge{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;}
+.adv-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,7vw,3rem);letter-spacing:-0.03em;color:var(--white);line-height:1.15;margin-bottom:14px;}
+.adv-hero h1 span{color:var(--orange);}
+.adv-hero p{font-size:0.92rem;color:var(--white-dim);max-width:460px;margin:0 auto 24px;line-height:1.8;}
+.adv-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;}
+.adv-stat{text-align:center;}
+.adv-stat-num{font-family:var(--font-display);font-weight:800;font-size:1.6rem;color:var(--orange);}
+.adv-stat-lbl{font-size:0.72rem;color:var(--white-dim);font-family:var(--font-mono);letter-spacing:0.05em;}
+
+/* SLOTS */
+.slots-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 24px;background:rgba(232,101,10,0.06);border-bottom:1px solid var(--black-border);}
+.slot-dot{width:14px;height:14px;border-radius:50%;}
+.slot-dot.taken{background:#ff4444;}
+.slot-dot.free{background:#22c55e;}
+.slots-text{font-family:var(--font-mono);font-size:0.75rem;color:var(--white-dim);}
+.slots-text span{color:var(--orange);}
+
+/* PLANS */
+.plans-section{padding:40px 24px;}
+.plans-title{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--white);margin-bottom:6px;text-align:center;}
+.plans-sub{font-size:0.82rem;color:var(--white-dim);text-align:center;margin-bottom:28px;}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;max-width:800px;margin:0 auto;}
+.plan-card{background:var(--black-card);border:2px solid var(--black-border);border-radius:16px;padding:24px;cursor:pointer;transition:all var(--transition);position:relative;}
+.plan-card:hover{border-color:rgba(232,101,10,0.4);}
+.plan-card.selected{border-color:var(--orange);background:rgba(232,101,10,0.06);}
+.plan-card.popular::before{content:'POPULAR';position:absolute;top:-1px;right:16px;background:var(--orange);color:var(--black);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;padding:3px 8px;border-radius:0 0 6px 6px;letter-spacing:0.08em;}
+.plan-icon{font-size:1.8rem;margin-bottom:12px;}
+.plan-name{font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--white);margin-bottom:4px;}
+.plan-price{font-family:var(--font-display);font-weight:800;font-size:1.8rem;color:var(--orange);margin-bottom:4px;}
+.plan-price span{font-size:0.85rem;color:var(--white-dim);font-weight:400;}
+.plan-desc{font-size:0.78rem;color:var(--white-dim);line-height:1.6;}
+.plan-select-indicator{width:20px;height:20px;border-radius:50%;border:2px solid var(--black-border);margin-top:14px;transition:all var(--transition);display:flex;align-items:center;justify-content:center;}
+.plan-card.selected .plan-select-indicator{border-color:var(--orange);background:var(--orange);}
+.plan-card.selected .plan-select-indicator::after{content:'✓';font-size:0.7rem;color:var(--black);font-weight:700;}
+
+/* STEPS */
+.steps-section{padding:0 24px 40px;}
+.steps-title{font-family:var(--font-display);font-weight:800;font-size:1.1rem;color:var(--white);margin-bottom:20px;text-align:center;}
+
+/* STEP 1 — PAYMENT */
+.step-box{background:var(--black-card);border:1px solid var(--black-border);border-radius:16px;padding:24px;margin-bottom:16px;}
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--orange);color:var(--black);font-family:var(--font-display);font-weight:800;font-size:0.88rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-title{font-family:var(--font-display);font-weight:700;font-size:0.95rem;color:var(--white);}
+.step-sub{font-size:0.78rem;color:var(--white-dim);}
+.bank-card{background:var(--black);border:1px solid var(--black-border);border-radius:12px;padding:16px;margin-bottom:14px;}
+.bank-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.bank-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--white-dim);letter-spacing:0.08em;text-transform:uppercase;}
+.bank-value{font-family:var(--font-display);font-weight:700;font-size:0.9rem;color:var(--white);}
+.bank-value.highlight{color:var(--orange);font-size:1.1rem;letter-spacing:0.05em;}
+.copy-btn{background:rgba(232,101,10,0.12);border:1px solid rgba(232,101,10,0.3);color:var(--orange);padding:4px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:var(--font-body);transition:all var(--transition);}
+.copy-btn:hover{background:var(--orange);color:var(--black);}
+.amount-display{background:rgba(232,101,10,0.08);border:1px solid rgba(232,101,10,0.2);border-radius:10px;padding:14px 16px;text-align:center;margin-bottom:14px;}
+.amount-display p{font-size:0.78rem;color:var(--white-dim);margin-bottom:4px;}
+.amount-display .amount{font-family:var(--font-display);font-weight:800;font-size:1.6rem;color:var(--orange);}
+.form-label{font-size:0.75rem;color:var(--white-dim);margin-bottom:6px;font-family:var(--font-mono);letter-spacing:0.05em;display:block;}
+.form-input{width:100%;background:var(--black);border:1px solid var(--black-border);border-radius:8px;padding:11px 14px;color:var(--white);font-family:var(--font-body);font-size:0.88rem;outline:none;transition:border-color var(--transition);margin-bottom:12px;}
+.form-input:focus{border-color:var(--orange);}
+.verify-btn{width:100%;background:var(--orange);color:var(--black);border:none;border-radius:10px;padding:13px;font-family:var(--font-display);font-weight:700;font-size:0.92rem;cursor:pointer;transition:background var(--transition);}
+.verify-btn:hover{background:var(--orange-light);}
+.verify-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* STEP 2 — UPLOAD */
+.upload-locked{text-align:center;padding:20px;color:var(--white-dim);font-size:0.85rem;}
+.upload-locked .lock-icon{font-size:2rem;display:block;margin-bottom:8px;}
+.drop-zone{border:2px dashed var(--black-border);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all var(--transition);margin-bottom:14px;}
+.drop-zone:hover,.drop-zone.dragging{border-color:var(--orange);background:rgba(232,101,10,0.05);}
+.dz-icon{font-size:2rem;display:block;margin-bottom:10px;}
+.drop-zone h4{font-family:var(--font-display);font-weight:700;font-size:0.95rem;color:var(--white);margin-bottom:6px;}
+.drop-zone p{font-size:0.8rem;color:var(--white-dim);}
+.file-preview{background:var(--black);border:1px solid var(--black-border);border-radius:8px;padding:12px;margin-bottom:12px;display:none;}
+.file-preview-inner{display:flex;align-items:center;gap:10px;}
+.file-preview img,.file-preview video{width:60px;height:60px;object-fit:cover;border-radius:6px;}
+.file-info h5{font-size:0.82rem;color:var(--white);font-weight:600;}
+.file-info p{font-size:0.72rem;color:var(--white-dim);}
+.submit-ad-btn{width:100%;background:var(--orange);color:var(--black);border:none;border-radius:10px;padding:13px;font-family:var(--font-display);font-weight:700;font-size:0.92rem;cursor:pointer;transition:background var(--transition);display:none;}
+.submit-ad-btn:hover{background:var(--orange-light);}
+.submit-ad-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* SUCCESS */
+.success-state{display:none;text-align:center;padding:40px 24px;}
+.success-icon{font-size:3.5rem;display:block;margin-bottom:16px;}
+.success-title{font-family:var(--font-display);font-weight:800;font-size:1.4rem;color:var(--white);margin-bottom:10px;}
+.success-sub{font-size:0.85rem;color:var(--white-dim);line-height:1.8;margin-bottom:24px;}
+.whatsapp-notify-btn{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px 24px;font-family:var(--font-display);font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:12px;width:100%;justify-content:center;}
+.whatsapp-notify-btn:hover{background:#1fba59;}
+.notice-box{background:rgba(232,101,10,0.08);border:1px solid rgba(232,101,10,0.2);border-radius:10px;padding:14px 16px;font-size:0.82rem;color:var(--white-dim);text-align:left;line-height:1.7;}
+.notice-box strong{color:var(--orange);}
+
+/* CONTACT */
+.contact-section{padding:0 24px 40px;}
+.contact-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px;}
+.contact-title{font-family:var(--font-display);font-weight:700;font-size:1rem;color:var(--white);margin-bottom:4px;}
+.contact-item{display:flex;align-items:center;gap:12px;}
+.contact-icon{font-size:1.2rem;flex-shrink:0;}
+.contact-info p{font-size:0.82rem;color:var(--white);font-weight:600;}
+.contact-info span{font-size:0.75rem;color:var(--white-dim);}
+.contact-link{display:inline-flex;align-items:center;gap:6px;margin-top:6px;background:#25D366;color:#fff;padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:600;font-family:var(--font-body);}
+
+/* FOOTER */
+.site-footer{background:var(--black-mid);border-top:1px solid var(--black-border);padding:40px 24px 24px;margin-top:40px;}
+.footer-logo{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--orange);margin-bottom:8px;}
+.footer-tagline{font-size:0.83rem;color:var(--white-dim);margin-bottom:24px;}
+.footer-links{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;}
+.footer-link{font-size:0.8rem;color:var(--white-dim);transition:color var(--transition);}
+.footer-link:hover{color:var(--orange);}
+.footer-bottom{border-top:1px solid var(--black-border);padding-top:20px;font-family:var(--font-mono);font-size:0.68rem;color:rgba(240,237,230,0.3);}
+.footer-bottom span{color:var(--orange);}
+
+/* TOAST */
+#slt-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid var(--orange);color:var(--white);padding:12px 20px;border-radius:10px;font-size:0.82rem;z-index:9999;max-width:90vw;text-align:center;pointer-events:none;display:none;}
+
+@media(max-width:480px){.plans-grid{grid-template-columns:1fr;}.adv-stats{gap:20px;}}
+
+/* INVITE WIDGET */
+#invite-fab{position:fixed;bottom:80px;right:20px;z-index:9000;background:var(--orange);color:var(--black);border:none;width:48px;height:48px;border-radius:50%;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(232,101,10,0.4);transition:all var(--transition);display:flex;align-items:center;justify-content:center;}
+#invite-fab:hover{transform:scale(1.1);background:var(--orange-light);}
+#invite-modal{display:none;position:fixed;inset:0;z-index:9001;background:rgba(8,8,8,0.85);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+#invite-modal.active{display:flex;}
+#invite-box{background:var(--black-card);border:1px solid var(--black-border);border-radius:20px 20px 0 0;padding:28px 24px;width:100%;max-width:500px;}
+#invite-box h3{font-family:var(--font-display);font-weight:800;font-size:1.1rem;color:var(--white);margin-bottom:6px;}
+#invite-box p{font-size:0.82rem;color:var(--white-dim);margin-bottom:20px;}
+.invite-url-box{background:var(--black);border:1px solid var(--black-border);border-radius:10px;padding:12px 14px;font-family:var(--font-mono);font-size:0.75rem;color:var(--orange);margin-bottom:14px;word-break:break-all;}
+.invite-btns{display:flex;gap:10px;flex-direction:column;}
+.invite-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px;font-family:var(--font-display);font-weight:700;font-size:0.9rem;cursor:pointer;}
+.invite-copy-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--orange);color:var(--black);border:none;border-radius:10px;padding:13px;font-family:var(--font-display);font-weight:700;font-size:0.9rem;cursor:pointer;}
+.invite-close-btn{background:none;border:1px solid var(--black-border);color:var(--white-dim);border-radius:10px;padding:11px;font-family:var(--font-body);font-size:0.85rem;cursor:pointer;margin-top:8px;width:100%;}
+
+/* ══════════ MARKETPLACE (restyled to SLT theme) ══════════ */
+.mkt-hero{padding:28px 24px 24px;background:linear-gradient(160deg,rgba(232,101,10,0.2) 0%,transparent 70%);border-bottom:1px solid var(--black-border);position:relative;overflow:hidden;}
+.mkt-hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(232,101,10,0.07) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;}
+.mkt-hero-inner{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.mkt-hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(232,101,10,0.12);border:1px solid rgba(232,101,10,0.3);padding:5px 14px;border-radius:20px;font-family:var(--font-mono);font-size:0.62rem;color:var(--orange);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;}
+.mkt-hero-title{font-family:var(--font-display);font-weight:800;font-size:clamp(1.6rem,6vw,2.2rem);line-height:1.1;color:var(--white);margin-bottom:8px;}
+.mkt-hero-title span{color:var(--orange);}
+.mkt-hero-sub{font-size:0.85rem;color:var(--white-dim);line-height:1.7;max-width:420px;}
+.mkt-btn-edit-profile{background:rgba(232,101,10,0.1);border:1px solid rgba(232,101,10,0.3);color:var(--orange);padding:9px 16px;border-radius:8px;font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.06em;cursor:pointer;transition:all var(--transition);white-space:nowrap;flex-shrink:0;display:none;}
+.mkt-btn-edit-profile:hover{background:rgba(232,101,10,0.22);}
+.mkt-btn-edit-profile.visible{display:block;}
+
+.mkt-feed-wrap{max-width:680px;margin:0 auto;padding:24px 16px 60px;}
+.mkt-live-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.mkt-live-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:mktpulse 2s infinite;}
+@keyframes mktpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+.mkt-live-txt{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.12em;color:var(--white-dim);text-transform:uppercase;}
+.mkt-live-count{font-family:var(--font-mono);font-size:0.62rem;color:var(--orange);}
+
+.post-card{background:var(--black-card);border:1px solid var(--black-border);border-left:3px solid var(--orange);border-radius:0 12px 12px 0;margin-bottom:14px;overflow:hidden;transition:border-color var(--transition);}
+.post-card:hover{border-color:rgba(232,101,10,0.4);border-left-color:var(--orange-light);}
+.post-head{padding:14px 14px 10px;display:flex;align-items:center;gap:10px;}
+.post-avatar{width:38px;height:38px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:0.9rem;color:var(--black);flex-shrink:0;}
+.post-meta{flex:1;min-width:0;}
+.post-biz{font-family:var(--font-display);font-weight:700;font-size:0.85rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.post-time{font-family:var(--font-mono);font-size:0.6rem;color:var(--white-dim);letter-spacing:0.05em;margin-top:2px;}
+.post-body{padding:0 14px 12px;}
+.post-text{font-size:0.88rem;color:var(--white);line-height:1.65;word-break:break-word;white-space:pre-wrap;}
+.post-media{width:100%;max-height:30vh;min-height:120px;display:block;object-fit:cover;cursor:pointer;margin-top:10px;background:var(--black-border);opacity:0;transition:opacity 0.18s ease;}
+.post-media.mkt-loaded{opacity:1;}
+.post-video{width:100%;max-height:30vh;min-height:120px;display:block;object-fit:cover;background:#000;margin-top:10px;opacity:0;transition:opacity 0.18s ease;}
+.post-video.mkt-loaded{opacity:1;}
+.post-foot{padding:10px 14px 14px;border-top:1px solid rgba(240,237,230,0.05);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.post-expire{font-family:var(--font-mono);font-size:0.58rem;color:var(--white-dim);letter-spacing:0.05em;}
+.btn-wa{display:inline-flex;align-items:center;gap:7px;background:#1a6632;border:none;color:#fff;padding:9px 16px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all var(--transition);}
+.btn-wa:hover{background:#22803e;}
+
+.mkt-skeleton{background:linear-gradient(90deg,var(--black-card) 25%,rgba(232,101,10,0.07) 50%,var(--black-card) 75%);background-size:200% 100%;animation:mktshimmer 1.4s infinite;border:1px solid var(--black-border);border-radius:12px;height:160px;margin-bottom:14px;}
+@keyframes mktshimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.mkt-state-box{text-align:center;padding:60px 20px;}
+.mkt-state-icon{font-size:42px;margin-bottom:14px;opacity:0.3;}
+.mkt-state-title{font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:var(--white);margin-bottom:8px;}
+.mkt-state-sub{font-size:0.82rem;color:var(--white-dim);line-height:1.6;max-width:280px;margin:0 auto 20px;}
+.mkt-btn-state{background:var(--orange);border:none;color:var(--black);border-radius:8px;padding:11px 24px;font-family:var(--font-display);font-weight:700;font-size:0.85rem;cursor:pointer;transition:background var(--transition);}
+.mkt-btn-state:hover{background:var(--orange-light);}
+
+.mkt-fab{position:fixed;bottom:144px;right:20px;z-index:80;width:56px;height:56px;background:var(--orange);border:none;color:var(--black);border-radius:50%;font-size:26px;cursor:pointer;box-shadow:0 4px 24px rgba(232,101,10,0.5);transition:all var(--transition);display:none;align-items:center;justify-content:center;}
+.mkt-fab:hover{background:var(--orange-light);transform:scale(1.08);}
+
+.mkt-sheet-mask{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:300;opacity:0;pointer-events:none;transition:all var(--transition);}
+.mkt-sheet-mask.on{opacity:1;pointer-events:all;}
+.mkt-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--black-mid);border-top:1px solid var(--black-border);border-radius:16px 16px 0 0;z-index:400;transform:translateY(100%);transition:all var(--transition);max-height:90vh;overflow-y:auto;}
+.mkt-sheet.on{transform:translateY(0);}
+.mkt-sheet-handle{width:36px;height:4px;background:var(--black-border);border-radius:2px;margin:12px auto 0;}
+.mkt-sheet-head{padding:14px 18px;border-bottom:1px solid var(--black-border);display:flex;align-items:center;justify-content:space-between;}
+.mkt-sheet-title{font-family:var(--font-display);font-weight:700;font-size:1rem;color:var(--white);}
+.mkt-sheet-close{background:none;border:none;color:var(--white-dim);font-size:1.3rem;cursor:pointer;padding:4px;}
+.mkt-sheet-body{padding:16px 18px 24px;}
+.mkt-compose-name{font-family:var(--font-mono);font-size:0.62rem;color:var(--orange);letter-spacing:0.08em;margin-bottom:10px;}
+.mkt-compose-area{width:100%;background:rgba(240,237,230,0.04);border:1px solid var(--black-border);border-radius:8px;color:var(--white);padding:12px 14px;font-family:var(--font-body);font-size:0.9rem;min-height:100px;resize:none;outline:none;transition:border-color var(--transition);line-height:1.6;}
+.mkt-compose-area:focus{border-color:var(--orange);}
+.mkt-compose-area::placeholder{color:var(--white-dim);}
+.mkt-compose-preview{margin-top:10px;position:relative;}
+.mkt-compose-preview img,.mkt-compose-preview video{width:100%;max-height:220px;object-fit:cover;border:1px solid var(--black-border);border-radius:8px;display:block;}
+.mkt-compose-remove{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.7);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.mkt-sheet-actions{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap;}
+.mkt-btn-attach{background:rgba(232,101,10,0.1);border:1px solid rgba(232,101,10,0.3);color:var(--orange);padding:10px 16px;border-radius:8px;font-size:0.82rem;font-weight:500;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;gap:7px;}
+.mkt-btn-attach:hover{background:rgba(232,101,10,0.22);}
+.mkt-btn-post{background:var(--orange);border:none;color:var(--black);padding:11px 24px;border-radius:8px;font-family:var(--font-body);font-size:0.85rem;font-weight:700;cursor:pointer;transition:background var(--transition);margin-left:auto;}
+.mkt-btn-post:hover{background:var(--orange-light);}
+.mkt-btn-post.busy{opacity:0.55;pointer-events:none;}
+.mkt-attach-hint{font-family:var(--font-mono);font-size:0.58rem;color:var(--white-dim);letter-spacing:0.04em;width:100%;margin-top:6px;}
+
+.mkt-modal-mask{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.mkt-modal-mask.on{display:flex;}
+.mkt-modal{background:var(--black-mid);border:1px solid var(--black-border);border-top:3px solid var(--orange);border-radius:12px;padding:28px 24px;width:100%;max-width:400px;}
+.mkt-modal-title{font-family:var(--font-display);font-weight:800;font-size:1.15rem;color:var(--white);margin-bottom:6px;}
+.mkt-modal-sub{font-size:0.82rem;color:var(--white-dim);margin-bottom:22px;line-height:1.5;}
+.mkt-modal-field{margin-bottom:14px;}
+.mkt-modal-field label{display:block;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--white-dim);text-transform:uppercase;margin-bottom:7px;}
+.mkt-modal-inp{width:100%;background:var(--black-card);border:1px solid var(--black-border);border-radius:8px;color:var(--white);padding:11px 14px;font-family:var(--font-body);font-size:0.88rem;outline:none;transition:border-color var(--transition);}
+.mkt-modal-inp:focus{border-color:var(--orange);}
+.mkt-modal-inp::placeholder{color:var(--white-dim);font-size:0.78rem;}
+.mkt-modal-hint{font-family:var(--font-mono);font-size:0.58rem;color:var(--white-dim);margin-top:5px;letter-spacing:0.03em;}
+.mkt-btn-modal-save{width:100%;background:var(--orange);border:none;color:var(--black);border-radius:8px;padding:13px;font-family:var(--font-body);font-size:0.88rem;font-weight:700;cursor:pointer;transition:background var(--transition);margin-top:6px;}
+.mkt-btn-modal-save:hover{background:var(--orange-light);}
+
+.mkt-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;}
+.mkt-lightbox.on{display:flex;}
+.mkt-lightbox-close{position:absolute;top:14px;right:14px;background:var(--orange);border:none;color:var(--black);width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.mkt-lightbox img{max-width:100%;max-height:90vh;object-fit:contain;}
+
+@media(max-width:480px){.tab-switch{padding:0 16px;}}
+@media(min-width:768px){.mkt-hero{padding:40px 40px 32px;}.mkt-feed-wrap{padding:28px 40px 60px;}.mkt-fab{bottom:160px;right:32px;}}
+
+</style>
+</head>
+<body>
+
+<div id="slt-toast"></div>
+<div class="nav-overlay"></div>
+
+<!-- NAV -->
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="nav-logo">SLT.TPI <span>At A Glance</span></div>
+    <button class="nav-close">✕</button>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item"><a class="nav-link" href="../index.html"><span><span class="nav-icon">🏠</span> Home</span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/brochure.html"><span><span class="nav-icon">📋</span> SLT Brochure</span></a></li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-pq"><span><span class="nav-icon">📝</span> Past Questions</span><span class="nav-arrow">›</span></div>
+      <ul class="sub-nav" id="sub-pq">
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd1">ND1 Past Questions</a></li>
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd2">ND2 Past Questions</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-notes"><span><span class="nav-icon">📚</span> Notes</span><span class="nav-arrow">›</span></div>
+      <ul class="sub-nav" id="sub-notes">
+        <li><a class="sub-nav-link" href="../pages/notes.html?level=nd1">ND1 Notes</a></li>
+        <li><a class="sub-nav-link" href="../pages/notes.html?level=nd2">ND2 Notes</a></li>
+      </ul>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../pages/gp-calculator.html"><span><span class="nav-icon">🎓</span> GP Calculator</span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/prosper-ai.html"><span><span class="nav-icon">💎</span> Prosper AI</span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/timetable.html"><span><span class="nav-icon">📅</span> Timetable</span></a></li>
+    <li class="nav-item">
+      <div class="nav-link active expanded" data-sub="sub-adv"><span><span class="nav-icon">📣</span> Advertise</span><span class="nav-arrow">›</span></div>
+      <ul class="sub-nav open" id="sub-adv">
+        <li><a class="sub-nav-link active" id="sub-adv-post" onclick="switchTab('advertise')">Post an Ad</a></li>
+        <li><a class="sub-nav-link" id="sub-adv-mkt" onclick="switchTab('marketplace')">🛒 Marketplace</a></li>
+      </ul>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../pages/admin.html"><span><span class="nav-icon">🔧</span> Admin</span></a></li>
+    <li class="nav-section-label">External</li>
+    <li class="nav-item"><a class="nav-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank"><span><span class="nav-icon">🌐</span> School Portal</span></a></li>
+  </ul>
+  <div class="nav-footer">
+    <div class="nav-avatar">OP</div>
+    <div class="nav-founder-info"><p>Prosperpeace</p><span>Founder — ND2 Class of 2026</span></div>
+  </div>
+</nav>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="hamburger"><span></span><span></span><span></span></button>
+  <div class="topbar-logo">SLT.TPI <span>At A Glance</span></div>
+  <div></div>
+</header>
+
+<main class="page-content">
+
+  <!-- TAB SWITCH -->
+  <div class="tab-switch">
+    <button class="tab-btn active" data-tab="advertise" onclick="switchTab('advertise')">📣 Advertise</button>
+    <button class="tab-btn" data-tab="marketplace" onclick="switchTab('marketplace')">🛒 Marketplace</button>
+  </div>
+
+  <!-- ══════════ TAB: ADVERTISE ══════════ -->
+  <div id="tab-advertise">
+
+    <!-- HERO -->
+    <div class="adv-hero">
+      <div class="adv-hero-badge">Advertising Platform</div>
+      <h1>Reach <span>SLT Students</span> Directly</h1>
+      <p>Your ad appears as a fullscreen overlay to every student using SLT.TPI At A Glance — targeted, affordable and effective.</p>
+      <div class="adv-stats">
+        <div class="adv-stat"><div class="adv-stat-num">100%</div><div class="adv-stat-lbl">SLT Students</div></div>
+        <div class="adv-stat"><div class="adv-stat-num">30min</div><div class="adv-stat-lbl">Ad Frequency</div></div>
+        <div class="adv-stat"><div class="adv-stat-num">30sec</div><div class="adv-stat-lbl">Ad Duration</div></div>
+      </div>
+    </div>
+
+    <!-- SLOTS -->
+    <div class="slots-bar">
+      <div id="slot-dots"></div>
+      <div class="slots-text" id="slots-text">Loading slots...</div>
+    </div>
+
+    <!-- PLANS -->
+    <div class="plans-section">
+      <div class="plans-title">Choose Your Plan</div>
+      <div class="plans-sub">All plans include fullscreen placement on every page, every 30 minutes.</div>
+      <div class="plans-grid" id="plans-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- STEPS -->
+    <div class="steps-section">
+      <div class="steps-title">How It Works</div>
+
+      <!-- STEP 1: PAYMENT -->
+      <div class="step-box" id="step1-box">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Make Payment</div>
+            <div class="step-sub">Transfer to our Palmpay account below</div>
+          </div>
+        </div>
+
+        <div class="amount-display">
+          <p>Amount to pay for selected plan</p>
+          <div class="amount" id="amount-display">Select a plan above</div>
+        </div>
+
+        <div class="bank-card">
+          <div class="bank-row">
+            <div>
+              <div class="bank-label">Bank</div>
+              <div class="bank-value">Palmpay</div>
+            </div>
+          </div>
+          <div class="bank-row">
+            <div>
+              <div class="bank-label">Account Number</div>
+              <div class="bank-value highlight">8916181848</div>
+            </div>
+            <button class="copy-btn" onclick="copyText('8916181848')">Copy</button>
+          </div>
+          <div class="bank-row">
+            <div>
+              <div class="bank-label">Account Name</div>
+              <div class="bank-value">Oyekanmi Prosperpeace Oluwajuwonlo</div>
+            </div>
+          </div>
+        </div>
+
+        <label class="form-label">Your Name / Business Name</label>
+        <input class="form-input" id="adv-name" type="text" placeholder="e.g. Mama Tolu Food Canteen">
+
+        <label class="form-label">Transaction ID / Reference</label>
+        <input class="form-input" id="adv-txid" type="text" placeholder="e.g. PAY240529XXXXXXXX">
+
+        <label class="form-label">Your WhatsApp Number</label>
+        <input class="form-input" id="adv-phone" type="tel" placeholder="e.g. 08012345678">
+
+        <button class="verify-btn" id="verify-btn" onclick="verifyPayment()">Confirm Payment & Proceed →</button>
+      </div>
+
+      <!-- STEP 2: UPLOAD -->
+      <div class="step-box" id="step2-box" style="opacity:0.5;pointer-events:none;">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Upload Your Ad</div>
+            <div class="step-sub">Image or video — max 30 seconds</div>
+          </div>
+        </div>
+
+        <div class="upload-locked" id="upload-locked">
+          <span class="lock-icon">🔒</span>
+          Complete payment step above to unlock upload
+        </div>
+
+        <div id="upload-area" style="display:none">
+          <div class="drop-zone" id="adv-dz" onclick="document.getElementById('adv-file').click()">
+            <span class="dz-icon">🎬</span>
+            <h4>Tap to select your ad</h4>
+            <p>Image (JPG, PNG) or Video (MP4) · Max 30 seconds for video</p>
+            <input type="file" id="adv-file" style="display:none" accept="image/*,video/*">
+          </div>
+          <div class="file-preview" id="file-preview">
+            <div class="file-preview-inner">
+              <div id="preview-media"></div>
+              <div class="file-info">
+                <h5 id="preview-name"></h5>
+                <p id="preview-size"></p>
+              </div>
+            </div>
+          </div>
+          <button class="submit-ad-btn" id="submit-ad-btn" onclick="submitAd()">📤 Submit Ad for Approval</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-state" id="success-state">
+      <span class="success-icon">🎉</span>
+      <div class="success-title">Ad Submitted Successfully!</div>
+      <div class="success-sub">Your ad is now <strong style="color:var(--orange)">pending approval</strong>. The admin will review and activate it within 24 hours.<br><br>Tap the button below to notify the admin on WhatsApp — this speeds up your approval.</div>
+      <button class="whatsapp-notify-btn" id="whatsapp-notify-btn" onclick="notifyAdmin()">
+        <span>📲</span> Notify Admin on WhatsApp
+      </button>
+      <div class="notice-box">
+        <strong>What happens next:</strong><br>
+        Admin reviews your ad → Approves it → Your ad goes live immediately on the 30-minute rotation schedule → Runs until your plan expires.
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-section">
+      <div class="steps-title">Have Questions?</div>
+      <div class="contact-card">
+        <div class="contact-title">Contact the Admin</div>
+        <div class="contact-item">
+          <span class="contact-icon">📱</span>
+          <div class="contact-info">
+            <p>WhatsApp</p>
+            <span>07046156991</span>
+            <br>
+            <a class="contact-link" href="https://wa.me/2347046156991" target="_blank">💬 Chat on WhatsApp</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">✉️</span>
+          <div class="contact-info">
+            <p>Email</p>
+            <span>oyekanmiprosperpeace04@gmail.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- ══════════ /TAB: ADVERTISE ══════════ -->
+
+  <!-- ══════════ TAB: MARKETPLACE ══════════ -->
+  <div id="tab-marketplace" style="display:none">
+
+    <div class="mkt-hero">
+      <div class="mkt-hero-inner">
+        <div>
+          <div class="mkt-hero-badge">🛒 Student Marketplace</div>
+          <h1 class="mkt-hero-title">Student <span>Marketplace</span></h1>
+          <p class="mkt-hero-sub">Buy, sell and swap with fellow SLT students. Post lasts 48 hours. Tap the + button to post.</p>
+        </div>
+        <button class="mkt-btn-edit-profile" id="mktBtnEditProfile" onclick="mktOpenEditProfile()">✏ Edit Profile</button>
+      </div>
+    </div>
+
+    <div class="mkt-feed-wrap">
+      <div class="mkt-live-row">
+        <div class="mkt-live-dot"></div>
+        <div class="mkt-live-txt">Live Feed</div>
+        <div class="mkt-live-count" id="mktLiveCount"></div>
+      </div>
+      <div id="mktFeedContainer">
+        <div class="mkt-skeleton"></div>
+        <div class="mkt-skeleton"></div>
+        <div class="mkt-skeleton"></div>
+      </div>
+      <div id="mktLoadingMore" style="display:none;text-align:center;padding:16px;color:var(--white-dim);font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.05em;">Loading more...</div>
+      <div id="mktSentinel" style="height:1px;"></div>
+    </div>
+
+
+  </div>
+  <!-- ══════════ /TAB: MARKETPLACE ══════════ -->
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-logo">SLT.TPI At A Glance</div>
+  <div class="footer-tagline">Everything an SLT student at Poly Ibadan needs. From your first day to graduation day.</div>
+  <div class="footer-links">
+    <a class="footer-link" href="../index.html">Home</a>
+    <a class="footer-link" href="../pages/past-questions.html">Past Questions</a>
+    <a class="footer-link" href="../pages/notes.html">Notes</a>
+    <a class="footer-link" href="../pages/gp-calculator.html">GP Calculator</a>
+    <a class="footer-link" href="../pages/prosper-ai.html">Prosper AI</a>
+    <a class="footer-link" href="../pages/about.html">About</a>
+    <a class="footer-link" href="../pages/admin.html">Admin</a>
+    <a class="footer-link" href="javascript:void(0)" onclick="switchTab('marketplace')">Marketplace</a>
+  </div>
+  <div class="footer-bottom">Built by <span>Oyekanmi Prosperpeace Oluwajuwonlo</span> — ND2 Class of 2026 • The Polytechnic Ibadan, Dept. of Science Laboratory Technology • Free forever. Share freely. 💎</div>
+</footer>
+
+<!-- ══════════ MARKETPLACE OVERLAYS (FAB, sheet, modal, lightbox) ══════════ -->
+<button class="mkt-fab" id="mktFab" onclick="mktOpenCompose()" aria-label="New post">+</button>
+
+<div class="mkt-sheet-mask" id="mktSheetMask" onclick="mktCloseSheet()"></div>
+<div class="mkt-sheet" id="mktComposeSheet">
+  <div class="mkt-sheet-handle"></div>
+  <div class="mkt-sheet-head">
+    <div class="mkt-sheet-title">New Post</div>
+    <button class="mkt-sheet-close" onclick="mktCloseSheet()">✕</button>
+  </div>
+  <div class="mkt-sheet-body">
+    <div class="mkt-compose-name" id="mktComposeName">Posting as —</div>
+    <textarea class="mkt-compose-area" id="mktComposeText" placeholder="What are you selling, offering or looking for? Write here..."></textarea>
+    <div class="mkt-compose-preview" id="mktComposePreview" style="display:none">
+      <img id="mktPreviewImg" src="" alt="" style="display:none">
+      <video id="mktPreviewVid" controls style="display:none; width:100%; max-height:220px;"></video>
+      <button class="mkt-compose-remove" onclick="mktRemoveAttachment()">✕</button>
+    </div>
+    <div class="mkt-sheet-actions">
+      <button class="mkt-btn-attach" onclick="mktTriggerAttach()">📎 Add Photo or Video</button>
+      <div class="mkt-attach-hint">Max 50MB. Images and videos only.</div>
+      <button class="mkt-btn-post" id="mktBtnPost" onclick="mktSubmitPost()">Post →</button>
+    </div>
+  </div>
+</div>
+<input type="file" id="mktFileInput" accept="image/*,video/*" style="display:none" onchange="mktOnFileChosen()">
+
+<div class="mkt-modal-mask" id="mktProfileModal">
+  <div class="mkt-modal">
+    <div class="mkt-modal-title" id="mktModalTitle">Set Up Your Business</div>
+    <div class="mkt-modal-sub" id="mktModalSub">This is your marketplace identity. Everyone will see this name when you post. You can change it anytime.</div>
+    <div class="mkt-modal-field">
+      <label for="mktInputBizName">Business Name</label>
+      <input class="mkt-modal-inp" type="text" id="mktInputBizName" placeholder="e.g. Bisi Fabrics, Tunde Prints...">
+    </div>
+    <div class="mkt-modal-field">
+      <label for="mktInputWA">WhatsApp Number</label>
+      <input class="mkt-modal-inp" type="tel" id="mktInputWA" placeholder="e.g. 08012345678">
+      <div class="mkt-modal-hint">Enter your Nigerian number. Buyers will contact you on WhatsApp.</div>
+    </div>
+    <button class="mkt-btn-modal-save" onclick="mktSaveProfile()">Save and Continue</button>
+  </div>
+</div>
+
+<div class="mkt-lightbox" id="mktLightbox">
+  <button class="mkt-lightbox-close" onclick="mktCloseLightbox()">✕</button>
+  <img id="mktLbImg" src="" alt="">
+</div>
+
+<script src="/SLT-TPI-AT-A-GLANCE/ad-player.js"></script>
+<script>
+/* ══════════ ADVERTISE (unchanged logic) ══════════ */
+var SITE_URL    = 'https://prosperpeace04.github.io/SLT-TPI-AT-A-GLANCE';
+var ADMIN_WA    = '2347046156991';
+var SUPA_URL    = 'https://ayoofobsthcnqzguuxmm.supabase.co';
+var SUPA_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5b29mb2JzdGhjbnF6Z3V1eG1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjQwODgsImV4cCI6MjA5NDUwMDA4OH0.AHK34Dmc3WiHloX3IYBJoLTqjDKHBp6lvrWfrrAVF_M';
+
+var selectedPlan  = null;
+var selectedPrice = 0;
+var paymentVerified = false;
+var adFile = null;
+var submittedAdData = {};
+
+/* ── LOAD PRICES & PLANS ── */
+function loadPlans() {
+  var prices = JSON.parse(localStorage.getItem('slt_ad_prices') || '{"month":"2000","6month":"7000","year":"13000"}');
+  var plans = [
+    { id:'month',  icon:'🌙', name:'1 Month',   price:prices.month,   popular:false, desc:'Perfect for events, promos and short campaigns. Ad plays every 30 mins for 30 days.' },
+    { id:'6month', icon:'⭐', name:'6 Months',  price:prices['6month'], popular:true,  desc:'Best value for growing businesses. Consistent exposure for 6 months straight.' },
+    { id:'year',   icon:'👑', name:'1 Year',    price:prices.year,    popular:false, desc:'Maximum visibility. Your ad runs for a full year — unbeatable reach.' },
+  ];
+  var grid = document.getElementById('plans-grid');
+  grid.innerHTML = plans.map(function(p) {
+    return '<div class="plan-card' + (p.popular?' popular':'') + '" onclick="selectPlan(\'' + p.id + '\',' + p.price + ')" id="plan-' + p.id + '">'
+      + '<div class="plan-icon">' + p.icon + '</div>'
+      + '<div class="plan-name">' + p.name + '</div>'
+      + '<div class="plan-price">₦' + Number(p.price).toLocaleString() + '<span>/plan</span></div>'
+      + '<div class="plan-desc">' + p.desc + '</div>'
+      + '<div class="plan-select-indicator"></div>'
+      + '</div>';
+  }).join('');
+}
+
+/* ── SLOTS ── */
+function loadSlots() {
+  var ads  = JSON.parse(localStorage.getItem('slt_ads') || '[]');
+  var now  = Date.now();
+  var active = ads.filter(function(a){ return a.status==='active' && a.expiry > now; }).length;
+  var dotsEl = document.getElementById('slot-dots');
+  var textEl = document.getElementById('slots-text');
+  var dots = '';
+  for (var i=0; i<Math.max(active,3); i++) {
+    dots += '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;background:' + (i < active ? '#ff4444' : '#22c55e') + '"></span>';
+  }
+  dotsEl.innerHTML = dots;
+  var free = Math.max(0, 3 - active);
+  textEl.innerHTML = '<span>' + free + ' slot' + (free!==1?'s':'') + ' available</span> · ' + active + ' active ad' + (active!==1?'s':'');
+}
+
+/* ── SELECT PLAN ── */
+function selectPlan(id, price) {
+  selectedPlan  = id;
+  selectedPrice = price;
+  document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('selected'); });
+  document.getElementById('plan-' + id).classList.add('selected');
+  var names = {month:'1 Month', '6month':'6 Months', year:'1 Year'};
+  document.getElementById('amount-display').textContent = '₦' + Number(price).toLocaleString() + ' — ' + names[id] + ' Plan';
+}
+
+/* ── VERIFY PAYMENT ── */
+function verifyPayment() {
+  if (!selectedPlan) { showToast('Please select a plan first!', true); return; }
+  var name  = document.getElementById('adv-name').value.trim();
+  var txid  = document.getElementById('adv-txid').value.trim();
+  var phone = document.getElementById('adv-phone').value.trim();
+  if (!name)  { showToast('Please enter your name or business name!', true); return; }
+  if (!txid)  { showToast('Please enter your transaction ID!', true); return; }
+  if (!phone) { showToast('Please enter your WhatsApp number!', true); return; }
+
+  submittedAdData = { name:name, txid:txid, phone:phone, plan:selectedPlan, price:selectedPrice };
+
+  paymentVerified = true;
+  var step2 = document.getElementById('step2-box');
+  step2.style.opacity = '1';
+  step2.style.pointerEvents = 'auto';
+  document.getElementById('upload-locked').style.display = 'none';
+  document.getElementById('upload-area').style.display = 'block';
+
+  document.getElementById('verify-btn').textContent = '✅ Payment Confirmed — Upload Your Ad Below';
+  document.getElementById('verify-btn').disabled = true;
+
+  showToast('✅ Payment details saved! Now upload your ad below.');
+
+  step2.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ── FILE UPLOAD ── */
+document.addEventListener('DOMContentLoaded', function() {
+  var fileInput = document.getElementById('adv-file');
+  var dz        = document.getElementById('adv-dz');
+
+  fileInput.addEventListener('change', function(e) {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+  dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('dragging'); });
+  dz.addEventListener('dragleave', function(){ dz.classList.remove('dragging'); });
+  dz.addEventListener('drop', function(e){ e.preventDefault(); dz.classList.remove('dragging'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+});
+
+function handleFile(file) {
+  adFile = file;
+  var preview = document.getElementById('file-preview');
+  var mediaEl = document.getElementById('preview-media');
+  var isVideo = file.type.startsWith('video/');
+
+  if (isVideo) {
+    var url = URL.createObjectURL(file);
+    var vid = document.createElement('video');
+    vid.src = url;
+    vid.onloadedmetadata = function() {
+      if (vid.duration > 31) {
+        showToast('⚠️ Video is ' + Math.round(vid.duration) + 's — max is 30 seconds!', true);
+        adFile = null;
+        URL.revokeObjectURL(url);
+        return;
+      }
+      URL.revokeObjectURL(url);
+    };
+  }
+
+  var objUrl = URL.createObjectURL(file);
+  if (isVideo) {
+    mediaEl.innerHTML = '<video src="' + objUrl + '" style="width:60px;height:60px;object-fit:cover;border-radius:6px;" muted></video>';
+  } else {
+    mediaEl.innerHTML = '<img src="' + objUrl + '" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">';
+  }
+  document.getElementById('preview-name').textContent = file.name;
+  document.getElementById('preview-size').textContent = (file.size/1024).toFixed(0) + ' KB · ' + (isVideo ? 'Video' : 'Image');
+  preview.style.display = 'block';
+  document.getElementById('submit-ad-btn').style.display = 'block';
+}
+
+/* ── SUBMIT AD ── */
+async function submitAd() {
+  if (!adFile) { showToast('Please select a file!', true); return; }
+  var btn = document.getElementById('submit-ad-btn');
+  btn.disabled = true; btn.textContent = '⏳ Uploading...';
+
+  try {
+    var safeName = Date.now() + '_' + adFile.name.replace(/\s+/g,'_');
+    var uploadUrl = SUPA_URL + '/storage/v1/object/nd2-notes/ads/' + safeName;
+    var res = await fetch(uploadUrl, {
+      method:'POST',
+      headers:{'Authorization':'Bearer '+SUPA_KEY,'Content-Type':adFile.type,'x-upsert':'true'},
+      body: adFile
+    });
+    if (!res.ok) throw new Error('Upload failed');
+
+    var fileUrl = SUPA_URL + '/storage/v1/object/public/nd2-notes/ads/' + safeName;
+
+    var planDays = { month:30, '6month':180, year:365 };
+    var expiry = new Date(); expiry.setDate(expiry.getDate() + planDays[submittedAdData.plan]);
+    var ads = JSON.parse(localStorage.getItem('slt_ads') || '[]');
+    ads.push({
+      advertiser: submittedAdData.name,
+      phone:      submittedAdData.phone,
+      txid:       submittedAdData.txid,
+      plan:       submittedAdData.plan,
+      url:        fileUrl,
+      fileName:   safeName,
+      uploadTime: Date.now(),
+      expiry:     expiry.getTime(),
+      status:     'pending',
+      isVideo:    adFile.type.startsWith('video/')
+    });
+    localStorage.setItem('slt_ads', JSON.stringify(ads));
+
+    document.getElementById('step1-box').style.display = 'none';
+    document.getElementById('step2-box').style.display = 'none';
+    document.getElementById('success-state').style.display = 'block';
+    document.getElementById('success-state').scrollIntoView({behavior:'smooth'});
+
+  } catch(err) {
+    showToast('Upload failed. Please try again.', true);
+    btn.disabled = false; btn.textContent = '📤 Submit Ad for Approval';
+  }
+}
+
+/* ── NOTIFY ADMIN VIA WHATSAPP ── */
+function notifyAdmin() {
+  var planNames = {month:'1 Month', '6month':'6 Months', year:'1 Year'};
+  var msg = '🔔 New Ad Pending Approval on SLT.TPI At A Glance!\n\n'
+    + '👤 Advertiser: ' + submittedAdData.name + '\n'
+    + '📱 Phone: ' + submittedAdData.phone + '\n'
+    + '📦 Plan: ' + planNames[submittedAdData.plan] + ' (₦' + Number(submittedAdData.price).toLocaleString() + ')\n'
+    + '🧾 Transaction ID: ' + submittedAdData.txid + '\n\n'
+    + '👉 Review here: ' + SITE_URL + '/pages/admin.html';
+  window.open('https://wa.me/' + ADMIN_WA + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+/* ── COPY ── */
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(function(){
+    showToast('✅ Copied: ' + text);
+  }).catch(function(){
+    showToast('Copy: ' + text);
+  });
+}
+
+/* ── SIDE NAV ── */
+document.querySelector('.hamburger').addEventListener('click', function(){ document.querySelector('.side-nav').classList.add('open'); document.querySelector('.nav-overlay').classList.add('active'); });
+document.querySelector('.nav-close').addEventListener('click', closeNav);
+document.querySelector('.nav-overlay').addEventListener('click', closeNav);
+function closeNav(){ document.querySelector('.side-nav').classList.remove('open'); document.querySelector('.nav-overlay').classList.remove('active'); }
+document.querySelectorAll('.nav-link[data-sub]').forEach(function(l){ l.addEventListener('click', function(){ document.getElementById(l.dataset.sub).classList.toggle('open'); l.classList.toggle('expanded'); }); });
+
+/* ── TOAST ── */
+function showToast(msg, isError) {
+  var t = document.getElementById('slt-toast');
+  t.textContent = msg; t.style.display = 'block';
+  t.style.borderColor = isError ? '#ff4444' : 'var(--orange)';
+  clearTimeout(t._t); t._t = setTimeout(function(){ t.style.display='none'; }, 4000);
+}
+
+/* ══════════ TAB SWITCHING ══════════ */
+var mktInited = false;
+function switchTab(tab) {
+  var isAdv = tab === 'advertise';
+  document.getElementById('tab-advertise').style.display = isAdv ? 'block' : 'none';
+  document.getElementById('tab-marketplace').style.display = isAdv ? 'none' : 'block';
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tab); });
+  document.getElementById('sub-adv-post').classList.toggle('active', isAdv);
+  document.getElementById('sub-adv-mkt').classList.toggle('active', !isAdv);
+  document.getElementById('mktFab').style.display = isAdv ? 'none' : 'flex';
+  closeNav();
+  if (!isAdv && !mktInited) { mktInited = true; mktLoadProfile(); mktCleanupExpired(); mktLoadFeed(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════ MARKETPLACE (logic unchanged — same Supabase project/table/bucket) ══════════ */
+var MKT_SB_URL    = 'https://ixsmyvwuavlxxywzgujn.supabase.co';
+var MKT_SB_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4c215dnd1YXZseHh5d3pndWpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NjAxMDAsImV4cCI6MjA5ODMzNjEwMH0.U2R4PB-YRdpE7NTYCheeh_G9insrmMxKk_PA1TKSVZM';
+var MKT_BUCKET    = 'marketplace-files';
+var MKT_TABLE     = 'marketplace_posts';
+var MKT_EXPIRY_MS = 48 * 60 * 60 * 1000;
+
+var mktProfile    = null;
+var mktChosenFile = null;
+var mktAfterProfileCb = null;
+
+function mktHdrs(extra) {
+  var h = { 'Authorization': 'Bearer ' + MKT_SB_KEY, 'apikey': MKT_SB_KEY, 'Content-Type': 'application/json' };
+  if (extra) Object.keys(extra).forEach(function(k){ h[k] = extra[k]; });
+  return h;
+}
+
+/* ── PROFILE ── */
+function mktLoadProfile() {
+  var raw = localStorage.getItem('nastes_mkt_profile');
+  if (raw) {
+    try { mktProfile = JSON.parse(raw); } catch(e) { mktProfile = null; }
+  }
+  if (mktProfile && mktProfile.name) {
+    document.getElementById('mktBtnEditProfile').classList.add('visible');
+  }
+}
+
+function mktOpenEditProfile() {
+  document.getElementById('mktModalTitle').textContent = 'Edit Your Profile';
+  document.getElementById('mktModalSub').textContent   = 'Update your business name or WhatsApp number.';
+  if (mktProfile) {
+    document.getElementById('mktInputBizName').value = mktProfile.name || '';
+    document.getElementById('mktInputWA').value      = mktProfile.wa   || '';
+  }
+  document.getElementById('mktProfileModal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function mktSaveProfile() {
+  var name = document.getElementById('mktInputBizName').value.trim();
+  var wa   = document.getElementById('mktInputWA').value.trim();
+  if (!name) { showToast('Please enter your business name.', true); return; }
+  if (!wa)   { showToast('Please enter your WhatsApp number.', true); return; }
+  mktProfile = { name: name, wa: mktFormatWA(wa) };
+  localStorage.setItem('nastes_mkt_profile', JSON.stringify(mktProfile));
+  document.getElementById('mktBtnEditProfile').classList.add('visible');
+  document.getElementById('mktProfileModal').classList.remove('on');
+  document.body.style.overflow = '';
+  if (mktAfterProfileCb) { mktAfterProfileCb(); mktAfterProfileCb = null; }
+}
+
+function mktFormatWA(num) {
+  var n = num.replace(/\D/g,'');
+  if (n.startsWith('0') && n.length === 11) n = '234' + n.slice(1);
+  return n;
+}
+
+/* ── COMPOSE ── */
+function mktOpenCompose() {
+  if (!mktProfile || !mktProfile.name) {
+    mktAfterProfileCb = mktOpenCompose;
+    document.getElementById('mktModalTitle').textContent = 'Set Up Your Business';
+    document.getElementById('mktModalSub').textContent   = 'This is your marketplace identity. Everyone will see this name when you post.';
+    document.getElementById('mktInputBizName').value = '';
+    document.getElementById('mktInputWA').value      = '';
+    document.getElementById('mktProfileModal').classList.add('on');
+    document.body.style.overflow = 'hidden';
+    return;
+  }
+  document.getElementById('mktComposeName').textContent = 'Posting as ' + mktProfile.name;
+  document.getElementById('mktComposeText').value = '';
+  mktRemoveAttachment();
+  document.getElementById('mktSheetMask').classList.add('on');
+  document.getElementById('mktComposeSheet').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function mktCloseSheet() {
+  document.getElementById('mktSheetMask').classList.remove('on');
+  document.getElementById('mktComposeSheet').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function mktTriggerAttach() {
+  document.getElementById('mktFileInput').click();
+}
+
+function mktOnFileChosen() {
+  var f = document.getElementById('mktFileInput').files[0];
+  if (!f) return;
+  if (f.size > 50 * 1024 * 1024) { showToast('File is too large. Maximum size is 50MB.', true); return; }
+  mktChosenFile = f;
+  var url = URL.createObjectURL(f);
+  var isImg = f.type.startsWith('image/');
+  document.getElementById('mktPreviewImg').style.display = isImg ? 'block' : 'none';
+  document.getElementById('mktPreviewVid').style.display = isImg ? 'none'  : 'block';
+  if (isImg) document.getElementById('mktPreviewImg').src = url;
+  else        document.getElementById('mktPreviewVid').src = url;
+  document.getElementById('mktComposePreview').style.display = 'block';
+}
+
+function mktRemoveAttachment() {
+  mktChosenFile = null;
+  document.getElementById('mktFileInput').value = '';
+  document.getElementById('mktPreviewImg').src  = '';
+  document.getElementById('mktPreviewVid').src  = '';
+  document.getElementById('mktPreviewImg').style.display = 'none';
+  document.getElementById('mktPreviewVid').style.display = 'none';
+  document.getElementById('mktComposePreview').style.display = 'none';
+}
+
+/* ── SUBMIT POST ── */
+function mktSubmitPost() {
+  var text = document.getElementById('mktComposeText').value.trim();
+  if (!text && !mktChosenFile) { showToast('Write something or attach a file before posting.', true); return; }
+  var btn = document.getElementById('mktBtnPost');
+  btn.classList.add('busy');
+  btn.textContent = 'Posting...';
+
+  if (mktChosenFile) {
+    mktCompressImage(mktChosenFile).then(function(fileToUpload){
+      mktUploadFile(fileToUpload, function(url, type) {
+        mktInsertPost(text, url, type, btn);
+      }, function() {
+        btn.classList.remove('busy');
+        btn.textContent = 'Post →';
+        showToast('File upload failed. Try again or post without attachment.', true);
+      });
+    });
+  } else {
+    mktInsertPost(text, null, null, btn);
+  }
+}
+
+/* Shrinks an image to a max 1280px edge and re-encodes as JPEG at ~72% quality
+   before upload, so posts are lighter and load faster for everyone viewing
+   the feed. Videos pass through unchanged. */
+function mktCompressImage(file) {
+  return new Promise(function(resolve) {
+    if (!file.type.startsWith('image/')) { resolve(file); return; }
+    var objUrl = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function() {
+      var maxDim = 1280;
+      var scale  = Math.min(1, maxDim / Math.max(img.width, img.height));
+      var canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(function(blob) {
+        URL.revokeObjectURL(objUrl);
+        if (!blob) { resolve(file); return; }
+        var newName = file.name.replace(/\.\w+$/, '') + '.jpg';
+        resolve(new File([blob], newName, { type: 'image/jpeg' }));
+      }, 'image/jpeg', 0.72);
+    };
+    img.onerror = function() { URL.revokeObjectURL(objUrl); resolve(file); };
+    img.src = objUrl;
+  });
+}
+
+function mktUploadFile(file, onSuccess, onError) {
+  var ext      = file.name.split('.').pop();
+  var filename = Date.now() + '_' + Math.random().toString(36).substr(2,6) + '.' + ext;
+  fetch(MKT_SB_URL + '/storage/v1/object/' + MKT_BUCKET + '/' + filename, {
+    method:  'POST',
+    headers: { 'Authorization': 'Bearer ' + MKT_SB_KEY, 'apikey': MKT_SB_KEY, 'Content-Type': file.type },
+    body:    file
+  })
+  .then(function(r){ if (!r.ok) throw new Error('upload failed'); return r.json(); })
+  .then(function(){
+    var url = MKT_SB_URL + '/storage/v1/object/public/' + MKT_BUCKET + '/' + filename;
+    onSuccess(url, file.type.startsWith('image/') ? 'image' : 'video');
+  })
+  .catch(onError);
+}
+
+function mktInsertPost(text, fileUrl, fileType, btn) {
+  var record = {
+    business_name: mktProfile.name,
+    whatsapp:      mktProfile.wa,
+    content:       text || null,
+    file_url:      fileUrl  || null,
+    file_type:     fileType || null
+  };
+  fetch(MKT_SB_URL + '/rest/v1/' + MKT_TABLE, {
+    method:  'POST',
+    headers: mktHdrs({ 'Prefer': 'return=minimal' }),
+    body:    JSON.stringify(record)
+  })
+  .then(function(r){
+    if (!r.ok) throw new Error('insert failed');
+    btn.classList.remove('busy');
+    btn.textContent = 'Post →';
+    mktCloseSheet();
+    mktLoadFeed();
+  })
+  .catch(function(){
+    btn.classList.remove('busy');
+    btn.textContent = 'Post →';
+    showToast('Could not post. Please try again.', true);
+  });
+}
+
+/* ── CLEANUP EXPIRED POSTS ── */
+function mktCleanupExpired() {
+  var cutoff = new Date(Date.now() - MKT_EXPIRY_MS).toISOString();
+  fetch(MKT_SB_URL + '/rest/v1/' + MKT_TABLE + '?created_at=lt.' + cutoff, {
+    method:  'DELETE',
+    headers: mktHdrs()
+  }).catch(function(){});
+}
+
+/* ── LOAD FEED (paginated) ── */
+var MKT_PAGE_SIZE   = 20;
+var mktOffset       = 0;
+var mktAllLoaded    = false;
+var mktLoadingMore  = false;
+var mktObserverSet  = false;
+var mktTotalLoaded  = 0;
+
+function mktLoadFeed() {
+  mktOffset      = 0;
+  mktAllLoaded   = false;
+  mktLoadingMore = false;
+  mktTotalLoaded = 0;
+  mktShowSkeleton();
+  mktFetchPage(0, true);
+  mktSetupInfiniteScroll();
+}
+
+function mktFetchPage(offset, isFirst) {
+  mktLoadingMore = true;
+  fetch(MKT_SB_URL + '/rest/v1/' + MKT_TABLE + '?select=*&order=created_at.desc&limit=' + MKT_PAGE_SIZE + '&offset=' + offset, {
+    headers: { 'Authorization': 'Bearer ' + MKT_SB_KEY, 'apikey': MKT_SB_KEY }
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    mktLoadingMore = false;
+    document.getElementById('mktLoadingMore').style.display = 'none';
+    if (!Array.isArray(data)) { if (isFirst) mktShowError(); return; }
+    if (data.length < MKT_PAGE_SIZE) mktAllLoaded = true;
+    mktTotalLoaded += data.length;
+    if (isFirst && !data.length) { mktShowEmpty(); return; }
+    mktRenderFeed(data, isFirst);
+  })
+  .catch(function(){
+    mktLoadingMore = false;
+    document.getElementById('mktLoadingMore').style.display = 'none';
+    if (isFirst) mktShowError();
+  });
+}
+
+function mktLoadMorePosts() {
+  if (mktLoadingMore || mktAllLoaded) return;
+  mktOffset += MKT_PAGE_SIZE;
+  document.getElementById('mktLoadingMore').style.display = 'block';
+  mktFetchPage(mktOffset, false);
+}
+
+function mktSetupInfiniteScroll() {
+  if (mktObserverSet) return;
+  mktObserverSet = true;
+  var sentinel = document.getElementById('mktSentinel');
+  var observer = new IntersectionObserver(function(entries){
+    if (entries[0].isIntersecting) mktLoadMorePosts();
+  }, { rootMargin: '400px' });
+  observer.observe(sentinel);
+}
+
+/* ── RENDER FEED ── */
+function mktRenderFeed(posts, replace) {
+  document.getElementById('mktLiveCount').textContent = mktTotalLoaded + ' post' + (mktTotalLoaded !== 1 ? 's' : '');
+
+  var html = '';
+  posts.forEach(function(p){
+    var initial  = (p.business_name || 'A').charAt(0).toUpperCase();
+    var timeAgo  = mktGetTimeAgo(p.created_at);
+    var expireIn = mktGetExpireIn(p.created_at);
+    var waLink   = 'https://wa.me/' + (p.whatsapp || '');
+    var safeUri  = mktEsc(p.file_url || '');
+
+    html +=
+      '<div class="post-card" id="mkt-post-' + p.id + '">' +
+        '<div class="post-head">' +
+          '<div class="post-avatar">' + mktEscHtml(initial) + '</div>' +
+          '<div class="post-meta">' +
+            '<div class="post-biz">' + mktEscHtml(p.business_name || 'Anonymous') + '</div>' +
+            '<div class="post-time">' + timeAgo + '</div>' +
+          '</div>' +
+        '</div>' +
+        (p.content ? '<div class="post-body"><div class="post-text">' + mktEscHtml(p.content) + '</div></div>' : '') +
+        (p.file_url && p.file_type === 'image'
+          ? '<img class="post-media" src="' + mktEscHtml(p.file_url) + '" alt="Post image" loading="lazy" onclick="mktOpenLightbox(\'' + safeUri + '\')">'
+          : '') +
+        (p.file_url && p.file_type === 'video'
+          ? '<video class="post-video" src="' + mktEscHtml(p.file_url) + '" controls playsinline preload="metadata"></video>'
+          : '') +
+        '<div class="post-foot">' +
+          '<div class="post-expire">Expires ' + expireIn + '</div>' +
+          '<a class="btn-wa" href="' + waLink + '" target="_blank" rel="noopener">💬 Chat on WhatsApp</a>' +
+        '</div>' +
+      '</div>';
+  });
+
+  var container = document.getElementById('mktFeedContainer');
+  if (replace) container.innerHTML = html;
+  else container.insertAdjacentHTML('beforeend', html);
+
+  mktGateMedia(container);
+}
+
+/* Hides each post's image/video until it has fully finished loading, so it
+   appears complete in one go instead of painting in bit by bit. */
+function mktGateMedia(container) {
+  var medias = container.querySelectorAll('.post-media:not([data-gated]), .post-video:not([data-gated])');
+  medias.forEach(function(el){
+    el.setAttribute('data-gated', '1');
+    var reveal = function(){ el.classList.add('mkt-loaded'); };
+    if (el.tagName === 'IMG') {
+      if (el.complete && el.naturalWidth > 0) reveal();
+      else { el.addEventListener('load', reveal); el.addEventListener('error', reveal); }
+    } else {
+      if (el.readyState >= 2) reveal();
+      else { el.addEventListener('loadeddata', reveal); el.addEventListener('error', reveal); }
+    }
+  });
+}
+
+/* ── TIME HELPERS ── */
+function mktGetTimeAgo(ts) {
+  var diff = Date.now() - new Date(ts).getTime();
+  var m = Math.floor(diff / 60000);
+  if (m < 1)  return 'Just now';
+  if (m < 60) return m + ' minute' + (m > 1 ? 's' : '') + ' ago';
+  var h = Math.floor(m / 60);
+  if (h < 24) return h + ' hour' + (h > 1 ? 's' : '') + ' ago';
+  return Math.floor(h / 24) + ' day(s) ago';
+}
+
+function mktGetExpireIn(ts) {
+  var expireAt = new Date(ts).getTime() + MKT_EXPIRY_MS;
+  var diff     = expireAt - Date.now();
+  if (diff <= 0) return 'soon';
+  var h = Math.floor(diff / 3600000);
+  if (h < 1) return 'in less than an hour';
+  return 'in ' + h + ' hour' + (h > 1 ? 's' : '');
+}
+
+/* ── LIGHTBOX ── */
+function mktOpenLightbox(src) {
+  document.getElementById('mktLbImg').src = src;
+  document.getElementById('mktLightbox').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function mktCloseLightbox() {
+  document.getElementById('mktLightbox').classList.remove('on');
+  document.getElementById('mktLbImg').src = '';
+  document.body.style.overflow = '';
+}
+document.getElementById('mktLightbox').addEventListener('click', function(e){ if (e.target === this) mktCloseLightbox(); });
+
+/* ── STATES ── */
+function mktShowSkeleton() {
+  var h = '';
+  for (var i = 0; i < 3; i++) h += '<div class="mkt-skeleton"></div>';
+  document.getElementById('mktFeedContainer').innerHTML = h;
+}
+function mktShowEmpty() {
+  document.getElementById('mktFeedContainer').innerHTML =
+    '<div class="mkt-state-box">' +
+      '<div class="mkt-state-icon">🛒</div>' +
+      '<div class="mkt-state-title">Marketplace is empty</div>' +
+      '<p class="mkt-state-sub">Be the first to post. Tap the + button to list what you are selling or offering.</p>' +
+      '<button class="mkt-btn-state" onclick="mktOpenCompose()">Post Something</button>' +
+    '</div>';
+}
+function mktShowError() {
+  document.getElementById('mktFeedContainer').innerHTML =
+    '<div class="mkt-state-box"><div class="mkt-state-icon">⚠️</div><div class="mkt-state-title">Could not load posts</div><p class="mkt-state-sub">Check your connection and refresh the page.</p></div>';
+}
+
+/* ── HELPERS ── */
+function mktEscHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function mktEsc(s)     { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function(){
+  loadPlans();
+  loadSlots();
+  if (window.location.hash === '#marketplace') { switchTab('marketplace'); }
+});
+</script>
+
+<!-- INVITE WIDGET -->
+<button id="invite-fab" onclick="document.getElementById('invite-modal').classList.add('active')" title="Share App">🔗</button>
+<div id="invite-modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div id="invite-box">
+    <h3>💎 Share SLT.TPI At A Glance</h3>
+    <p>Share this free resource with your fellow SLT students!</p>
+    <div class="invite-url-box">https://prosperpeace04.github.io/SLT-TPI-AT-A-GLANCE</div>
+    <div class="invite-btns">
+      <button class="invite-wa-btn" onclick="shareWhatsApp()">📲 Share on WhatsApp</button>
+      <button class="invite-copy-btn" onclick="copyInviteLink()">📋 Copy Link</button>
+      <button class="invite-close-btn" onclick="document.getElementById('invite-modal').classList.remove('active')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function shareWhatsApp(){
+  var msg = "Hey! 👋 Check out SLT.TPI At A Glance — free notes, past questions, report books, GP calculator and more for SLT students at The Polytechnic Ibadan 💎\n\nhttps://prosperpeace04.github.io/SLT-TPI-AT-A-GLANCE";
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+function copyInviteLink(){
+  navigator.clipboard.writeText('https://prosperpeace04.github.io/SLT-TPI-AT-A-GLANCE').then(function(){
+    showToast('✅ Link copied!');
+    document.getElementById('invite-modal').classList.remove('active');
+  });
+}
+</script>
+
+</body>
+</html>
