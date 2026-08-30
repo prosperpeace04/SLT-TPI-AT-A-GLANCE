@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes — SLT.TPI At A Glance</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --orange: #E8650A;
+  --orange-light: #FF7A1A;
+  --orange-dark: #C4500A;
+  --black: #080808;
+  --black-mid: #111111;
+  --black-card: #161616;
+  --black-border: #222222;
+  --white: #F0EDE6;
+  --white-dim: #B8B5AF;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  --nav-width: 300px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
+::selection { background: var(--orange); color: var(--black); }
+a { color: inherit; text-decoration: none; }
+
+/* NAV OVERLAY */
+.nav-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(8,8,8,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--transition);
+}
+.nav-overlay.active { opacity: 1; pointer-events: all; }
+
+/* SIDE NAV */
+.side-nav {
+  position: fixed; top: 0; left: calc(-1 * var(--nav-width));
+  width: var(--nav-width); height: 100vh;
+  background: var(--black-mid);
+  border-right: 1px solid var(--black-border);
+  z-index: 999;
+  transition: left var(--transition);
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.side-nav.open { left: 0; }
+.nav-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--black-border); }
+.nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; color: var(--orange); letter-spacing: -0.02em; }
+.nav-logo span { color: var(--white); }
+.nav-close {
+  position: absolute; top: 18px; right: 16px;
+  background: none; border: none; color: var(--white-dim);
+  font-size: 1.4rem; cursor: pointer; line-height: 1; transition: color var(--transition);
+}
+.nav-close:hover { color: var(--orange); }
+.nav-list { list-style: none; padding: 12px 0; flex: 1; }
+.nav-item { border-bottom: 1px solid rgba(255,255,255,0.04); }
+.nav-link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px; font-family: var(--font-body); font-weight: 500;
+  font-size: 0.88rem; color: var(--white-dim); cursor: pointer;
+  transition: all var(--transition); letter-spacing: 0.01em;
+}
+.nav-link:hover, .nav-link.active { color: var(--white); background: rgba(232,101,10,0.08); }
+.nav-link .nav-icon { font-size: 1rem; margin-right: 10px; }
+.nav-link .nav-arrow { font-size: 0.75rem; transition: transform var(--transition); }
+.nav-link.expanded .nav-arrow { transform: rotate(90deg); }
+.badge-new {
+  background: var(--orange); color: var(--black);
+  font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.05em; margin-left: 6px;
+}
+.sub-nav { display: none; list-style: none; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.04); }
+.sub-nav.open { display: block; }
+.sub-nav-link {
+  display: block; padding: 10px 20px 10px 44px; font-size: 0.82rem;
+  color: var(--white-dim); cursor: pointer; transition: all var(--transition);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.sub-nav-link:hover { color: var(--orange); background: rgba(232,101,10,0.05); }
+.nav-section-label {
+  padding: 14px 20px 6px; font-family: var(--font-mono);
+  font-size: 0.62rem; color: rgba(240,237,230,0.3);
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+.nav-footer {
+  padding: 16px 20px; border-top: 1px solid var(--black-border);
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 0.9rem;
+  color: var(--black); flex-shrink: 0;
+}
+.nav-founder-info p { font-family: var(--font-body); font-weight: 600; font-size: 0.8rem; color: var(--white); line-height: 1.2; }
+.nav-founder-info span { font-size: 0.72rem; color: var(--white-dim); }
+
+/* TOP BAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 14px 20px; display: flex; align-items: center;
+  justify-content: space-between;
+  background: rgba(8,8,8,0.9); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--black-border);
+}
+.hamburger {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; gap: 5px; padding: 4px;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--white); border-radius: 2px; transition: all var(--transition);
+}
+.hamburger:hover span { background: var(--orange); }
+.topbar-logo { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--orange); letter-spacing: -0.02em; }
+.topbar-logo span { color: var(--white); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-ai-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--orange); color: var(--black); border: none;
+  padding: 7px 14px; border-radius: 6px;
+  font-family: var(--font-body); font-weight: 600; font-size: 0.78rem;
+  cursor: pointer; transition: all var(--transition); text-decoration: none;
+}
+.topbar-ai-btn:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+/* PAGE */
+.page-content { padding-top: 60px; min-height: 100vh; }
+.page-header {
+  padding: 50px 24px 36px;
+  background: linear-gradient(160deg, rgba(232,101,10,0.15) 0%, transparent 70%);
+  border-bottom: 1px solid var(--black-border); position: relative;
+}
+.page-header::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(232,101,10,0.07) 1px, transparent 1px);
+  background-size: 30px 30px; pointer-events: none;
+}
+.section-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+.page-header h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 6vw, 2.6rem); letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin-bottom: 10px; }
+.page-header p { font-size: 0.9rem; color: var(--white-dim); max-width: 500px; }
+
+/* LEVEL TABS (ND1 / ND2) */
+.level-tabs {
+  display: flex; gap: 0;
+  border-bottom: 2px solid var(--black-border);
+  padding: 0 24px;
+  background: var(--black-mid);
+}
+.level-btn {
+  background: none; border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--white-dim);
+  padding: 16px 24px;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; white-space: nowrap;
+  transition: all var(--transition);
+  margin-bottom: -2px;
+  letter-spacing: -0.01em;
+}
+.level-btn:hover { color: var(--white); }
+.level-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* SEMESTER TABS */
+.sem-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--black-border);
+  padding: 0 24px;
+  background: rgba(0,0,0,0.3);
+}
+.sem-btn {
+  background: none; border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--white-dim);
+  padding: 12px 18px;
+  font-family: var(--font-body); font-weight: 500; font-size: 0.85rem;
+  cursor: pointer; white-space: nowrap;
+  transition: all var(--transition);
+  margin-bottom: -1px;
+}
+.sem-btn:hover { color: var(--white); }
+.sem-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* LEVEL PANELS */
+.level-panel { display: none; }
+.level-panel.active { display: block; }
+
+/* SEM PANELS */
+.sem-panel { display: none; padding: 24px; }
+.sem-panel.active { display: block; }
+
+/* COURSE CARD GRID */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.course-card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 14px;
+  padding: 20px;
+  transition: all var(--transition);
+}
+.course-card:hover { border-color: rgba(232,101,10,0.4); }
+.course-card-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 10px; margin-bottom: 14px;
+}
+.course-code {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: var(--orange); letter-spacing: 0.08em;
+  background: rgba(232,101,10,0.1);
+  border: 1px solid rgba(232,101,10,0.2);
+  padding: 3px 8px; border-radius: 4px;
+}
+.course-status-badge {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  padding: 3px 8px; border-radius: 4px; font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.status-available { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+.status-soon { background: rgba(240,237,230,0.06); color: var(--white-dim); border: 1px solid var(--black-border); }
+.course-name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.92rem; color: var(--white); margin-bottom: 14px; line-height: 1.35;
+}
+.course-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-view, .btn-download, .btn-coming {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 8px;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition); border: none;
+  text-decoration: none;
+}
+.btn-view {
+  background: var(--orange); color: var(--black);
+}
+.btn-view:hover { background: var(--orange-light); transform: translateY(-1px); }
+.btn-download {
+  background: transparent;
+  border: 1px solid var(--black-border);
+  color: var(--white-dim);
+}
+.btn-download:hover { border-color: var(--orange); color: var(--orange); }
+.btn-coming {
+  background: transparent;
+  border: 1px solid var(--black-border);
+  color: var(--white-dim);
+  cursor: default; opacity: 0.6; font-size: 0.75rem;
+}
+.btn-upload-hint {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.73rem; color: var(--white-dim);
+  padding: 6px 10px; border-radius: 6px;
+  border: 1px dashed var(--black-border);
+  text-decoration: none; transition: all var(--transition);
+}
+.btn-upload-hint:hover { border-color: var(--orange); color: var(--orange); }
+
+/* NOTE CONTENT (ND2 rich text) */
+.note-container { max-width: 800px; margin: 0 auto; }
+.note-block {
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: 12px; padding: 28px 24px; margin-bottom: 24px;
+}
+.note-block h2 {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;
+  color: var(--orange); margin-bottom: 16px; letter-spacing: -0.02em;
+  padding-bottom: 10px; border-bottom: 1px solid var(--black-border);
+}
+.note-block h3 { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--white); margin: 20px 0 10px; }
+.note-block p { color: var(--white-dim); font-size: 0.9rem; line-height: 1.85; margin-bottom: 12px; }
+.note-block ul, .note-block ol { padding-left: 20px; margin-bottom: 12px; }
+.note-block li { color: var(--white-dim); font-size: 0.88rem; line-height: 1.8; margin-bottom: 6px; }
+.note-block strong { color: var(--white); font-weight: 600; }
+.note-block .formula {
+  background: rgba(232,101,10,0.08); border-left: 3px solid var(--orange);
+  padding: 12px 16px; border-radius: 0 8px 8px 0;
+  font-family: var(--font-mono); font-size: 0.82rem; color: var(--orange-light);
+  margin: 12px 0; overflow-x: auto;
+}
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin: 16px 0; }
+.data-table th {
+  background: rgba(232,101,10,0.15); color: var(--orange);
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 10px 12px; text-align: left;
+  border-bottom: 1px solid var(--black-border);
+}
+.data-table td { padding: 9px 12px; color: var(--white-dim); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.data-table tr:hover td { background: rgba(232,101,10,0.04); color: var(--white); }
+
+.notice {
+  background: rgba(232,101,10,0.08); border: 1px solid rgba(232,101,10,0.25);
+  border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;
+  font-size: 0.85rem; color: var(--white-dim);
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.notice .notice-icon { color: var(--orange); font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ND2 course sub-tabs */
+.course-tab-nav {
+  display: flex; gap: 0; border-bottom: 1px solid var(--black-border);
+  overflow-x: auto;
+}
+.course-tab-btn {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--white-dim); padding: 12px 16px;
+  font-family: var(--font-body); font-weight: 500; font-size: 0.82rem;
+  cursor: pointer; white-space: nowrap; transition: all var(--transition);
+}
+.course-tab-btn:hover { color: var(--white); }
+.course-tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+.course-tab-panel { display: none; padding: 24px 0; }
+.course-tab-panel.active { display: block; }
+
+/* Loading spinner */
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(240,237,230,0.2); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* FOOTER */
+.site-footer {
+  background: var(--black-mid); border-top: 1px solid var(--black-border);
+  padding: 40px 24px 24px; margin-top: 60px;
+}
+.footer-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; color: var(--orange); margin-bottom: 8px; }
+.footer-tagline { font-size: 0.83rem; color: var(--white-dim); margin-bottom: 24px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+.footer-link { font-size: 0.8rem; color: var(--white-dim); transition: color var(--transition); text-decoration: none; }
+.footer-link:hover { color: var(--orange); }
+.footer-bottom { border-top: 1px solid var(--black-border); padding-top: 20px; font-family: var(--font-mono); font-size: 0.68rem; color: rgba(240,237,230,0.3); }
+.footer-bottom span { color: var(--orange); }
+
+@media (max-width: 480px) {
+  .course-grid { grid-template-columns: 1fr; }
+  .page-header { padding: 50px 20px 36px; }
+  .sem-panel { padding: 16px; }
+  .topbar-right { gap: 6px; }
+  .topbar-ai-btn { padding: 6px 9px; font-size: 0.7rem; }
+  .topbar-logo { font-size: 0.85rem; }
+}
+  </style>
+  <!-- PWA -->
+  <link rel="manifest" href="/SLT-TPI-AT-A-GLANCE/manifest.json">
+  <meta name="theme-color" content="#E8650A">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SLT.TPI">
+  <link rel="apple-touch-icon" href="/SLT-TPI-AT-A-GLANCE/Icon/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/SLT-TPI-AT-A-GLANCE/Icon/icon-192.png">
+  <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+      navigator.serviceWorker.register("/SLT-TPI-AT-A-GLANCE/sw.js")
+        .then(function(reg) { console.log("SW registered:", reg.scope); })
+        .catch(function(err) { console.log("SW error:", err); });
+    });
+  }
+  </script>
+</head>
+<body>
+
+<div class="nav-overlay"></div>
+
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="nav-logo">SLT.TPI <span>At A Glance</span></div>
+    <button class="nav-close">✕</button>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item"><a class="nav-link" href="../index.html"><span><span class="nav-icon">🏠</span> Home</span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/brochure.html"><span><span class="nav-icon">📋</span> SLT Brochure</span></a></li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-pq"><span><span class="nav-icon">📝</span> Past Questions</span><span class="nav-arrow">›</span></div>
+      <ul class="sub-nav" id="sub-pq">
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd1">ND1 Past Questions</a></li>
+        <li><a class="sub-nav-link" href="../pages/past-questions.html?level=nd2">ND2 Past Questions</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-notes"><span><span class="nav-icon">📚</span> Notes</span><span class="nav-arrow">›</span></div>
+      <ul class="sub-nav" id="sub-notes">
+        <li><a class="sub-nav-link" href="notes.html?level=nd1">ND1 Notes</a></li>
+        <li><a class="sub-nav-link" href="notes.html?level=nd2">ND2 Notes</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link" data-sub="sub-reports"><span><span class="nav-icon">🔬</span> ND2 Report Books</span><span class="nav-arrow">›</span></div>
+      <ul class="sub-nav" id="sub-reports">
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=biochem">Biochemistry (STC 222)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=genetics">Genetics (STB 221)</a></li>
+        <li><a class="sub-nav-link" href="../pages/report-books.html?sub=ecology">Ecology (STB 222)</a></li>
+      </ul>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../pages/gp-calculator.html"><span><span class="nav-icon">🎓</span> GP Calculator</span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/prosper-ai.html"><span><span class="nav-icon">💎</span> Prosper AI <span class="badge-new">NEW</span></span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/about.html"><span><span class="nav-icon">👤</span> About the Founder</span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/timetable.html"><span><span class="nav-icon">📅</span> Timetable</span></a></li>
+    <li class="nav-item"><a class="nav-link" href="../pages/admin.html"><span><span class="nav-icon">🔧</span> Admin</span></a></li>
+    <li class="nav-section-label">External</li>
+    <li class="nav-item"><a class="nav-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank"><span><span class="nav-icon">🌐</span> School Portal</span></a></li>
+  </ul>
+  <div class="nav-footer">
+    <div class="nav-avatar">OP</div>
+    <div class="nav-founder-info"><p>Prosperpeace</p><span>Founder — ND2 Class of 2026</span></div>
+  </div>
+</nav>
+
+<header class="topbar">
+  <button class="hamburger" aria-label="Open navigation"><span></span><span></span><span></span></button>
+  <div class="topbar-logo">SLT.TPI <span>At A Glance</span></div>
+  <div class="topbar-right">
+    <a class="topbar-ai-btn" href="../pages/prosper-ai.html">💎 Prosper AI</a>
+    <a class="topbar-ai-btn" href="../pages/advertise.html#marketplace">🛒 Market</a>
+  </div>
+</header>
+
+<main class="page-content">
+
+  <div class="page-header">
+    <div class="section-label">Academic Resources</div>
+    <h1>Course Notes</h1>
+    <p>Complete notes for ND1 and ND2. Read, study, and download.</p>
+  </div>
+
+  <!-- LEVEL TABS: ND1 / ND2 -->
+  <div class="level-tabs">
+    <button class="level-btn active" data-level="nd1">📗 ND1 Notes</button>
+    <button class="level-btn" data-level="nd2">📘 ND2 Notes</button>
+  </div>
+
+  <!-- ══════════ ND1 PANEL ══════════ -->
+  <div class="level-panel active" data-level="nd1">
+    <div class="sem-tabs">
+      <button class="sem-btn active" data-sem="nd1-s1">1st Semester</button>
+      <button class="sem-btn" data-sem="nd1-s2">2nd Semester</button>
+    </div>
+
+    <!-- ND1 First Semester -->
+    <div class="sem-panel active" data-sem="nd1-s1">
+      <div id="nd1-s1-grid" class="course-grid">
+        <div style="color:var(--white-dim);font-size:0.85rem;display:flex;align-items:center;gap:8px">
+          <span class="spinner"></span> Loading courses…
+        </div>
+      </div>
+    </div>
+
+    <!-- ND1 Second Semester -->
+    <div class="sem-panel" data-sem="nd1-s2">
+      <div id="nd1-s2-grid" class="course-grid">
+        <div style="color:var(--white-dim);font-size:0.85rem;display:flex;align-items:center;gap:8px">
+          <span class="spinner"></span> Loading courses…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ ND2 PANEL ══════════ -->
+  <div class="level-panel" data-level="nd2">
+    <div class="sem-tabs">
+      <button class="sem-btn active" data-sem="nd2-s1">1st Semester</button>
+      <button class="sem-btn" data-sem="nd2-s2">2nd Semester</button>
+    </div>
+
+    <!-- ND2 First Semester -->
+    <div class="sem-panel active" data-sem="nd2-s1">
+      <div id="nd2-s1-grid" class="course-grid">
+        <div style="color:var(--white-dim);font-size:0.85rem;display:flex;align-items:center;gap:8px">
+          <span class="spinner"></span> Loading courses…
+        </div>
+      </div>
+    </div>
+    <!-- ND2 Second Semester -->
+    <div class="sem-panel" data-sem="nd2-s2">
+      <div id="nd2-s2-grid" class="course-grid">
+        <div style="color:var(--white-dim);font-size:0.85rem;display:flex;align-items:center;gap:8px">
+          <span class="spinner"></span> Loading courses…
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-logo">SLT.TPI At A Glance</div>
+  <div class="footer-tagline">Everything an SLT student at Poly Ibadan needs. From your first day to graduation day.</div>
+  <div class="footer-links">
+    <a class="footer-link" href="../index.html">Home</a>
+    <a class="footer-link" href="../pages/brochure.html">SLT Brochure</a>
+    <a class="footer-link" href="../pages/past-questions.html">Past Questions</a>
+    <a class="footer-link" href="../pages/notes.html">Notes</a>
+    <a class="footer-link" href="../pages/report-books.html">Report Books</a>
+    <a class="footer-link" href="../pages/gp-calculator.html">GP Calculator</a>
+    <a class="footer-link" href="../pages/prosper-ai.html">Prosper AI</a>
+    <a class="footer-link" href="../pages/about.html">About</a>
+    <a class="footer-link" href="../pages/admin.html">Admin</a>
+    <a class="footer-link" href="https://schooltry.polyibadan.edu.ng/student" target="_blank">School Portal</a>
+  </div>
+  <div class="footer-bottom">
+    Built by <span>Oyekanmi Prosperpeace Oluwajuwonlo</span> — ND2 Class of 2026 •
+    The Polytechnic Ibadan, Dept. of Science Laboratory Technology •
+    Free forever. Share freely. 💎
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// SLT.TPI AT A GLANCE — NOTES PAGE
+// Reads from Supabase DATABASE TABLES:
+//   nd1_notes  → columns: code, semester, url, file_name
+//   nd2_notes  → columns: code, semester, url, file_name
+// Upload via admin → reflects instantly for ALL users.
+// ══════════════════════════════════════════════
+
+var SUPA_URL = 'https://ayoofobsthcnqzguuxmm.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5b29mb2JzdGhjbnF6Z3V1eG1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjQwODgsImV4cCI6MjA5NDUwMDA4OH0.AHK34Dmc3WiHloX3IYBJoLTqjDKHBp6lvrWfrrAVF_M';
+
+// ── ND1 COURSES ──
+var ND1_COURSES = {
+  s1: [
+    { code: 'STB111', name: 'Plant and Animal Taxonomy' },
+    { code: 'STB112', name: 'Morphology and Physiology of Living Things' },
+    { code: 'STC111', name: 'General Principles of Chemistry' },
+    { code: 'STC112', name: 'Inorganic Chemistry I' },
+    { code: 'STP111', name: 'Mechanics' },
+    { code: 'STP112', name: 'Heat Energy' },
+    { code: 'STP113', name: 'Electronic Logic for Science' },
+    { code: 'GLT111', name: 'General Laboratory Techniques I' },
+    { code: 'MTH113', name: 'Algebra for Science' },
+    { code: 'GNS101', name: 'Use of English I' },
+    { code: 'GNS111', name: 'Citizenship Education' },
+    { code: 'GNS106', name: 'Introduction to Computing' },
+    { code: 'LIB111', name: 'Use of Library' }
+  ],
+  s2: [
+    { code: 'STB121', name: 'Cell Biology' },
+    { code: 'STC121', name: 'Organic Chemistry I' },
+    { code: 'STC122', name: 'Physical Chemistry' },
+    { code: 'STC123', name: 'Analytical Chemistry' },
+    { code: 'STP121', name: 'Electricity and Magnetism' },
+    { code: 'STP122', name: 'Optics and Waves' },
+    { code: 'COM123', name: 'Computer Application Packages I' },
+    { code: 'GLT121', name: 'General Laboratory Techniques II' },
+    { code: 'PTD121', name: 'Technical Drawing and Workshop Practice' },
+    { code: 'EED126', name: 'Introduction to Entrepreneurship' },
+    { code: 'GNS102', name: 'Communication in English I' }
+  ]
+};
+
+// ── ND2 SECOND SEMESTER COURSES ──
+var ND2_S2_COURSES = [
+  { code: 'GLT222', name: 'General Laboratory Techniques IV (Glass Blowing)' },
+  { code: 'STC221', name: 'Organic Chemistry II' },
+  { code: 'STC222', name: 'Biochemistry' },
+  { code: 'STP221', name: 'Maintenance and Repairs of Scientific Equipment' },
+  { code: 'EED226', name: 'Practices of Entrepreneurship' },
+  { code: 'STB221', name: 'Genetics' },
+  { code: 'STB222', name: 'Ecology' },
+  { code: 'GNS113', name: 'Industrial Management' },
+  { code: 'GNS121', name: 'Citizenship Education II' },
+  { code: 'GNS202', name: 'Communication in English II' },
+  { code: 'SLT222', name: 'Science Laboratory Technology Practice' }
+];
+
+// ── ND2 FIRST SEMESTER COURSES ──
+var ND2_S1_COURSES = [
+  { code: 'STB211', name: 'Pest and Pest Control' },
+  { code: 'STB212', name: 'Pathology' },
+  { code: 'STM211', name: 'Introduction to Microbiology' },
+  { code: 'STC211', name: 'Inorganic Chemistry II' },
+  { code: 'STC212', name: 'Instrumental and Analytical Chemistry' },
+  { code: 'STP211', name: 'Electronics' },
+  { code: 'STP213', name: 'Thermodynamics and Electromagnetism' },
+  { code: 'MTH213', name: 'Calculus for Science' },
+  { code: 'GNS201', name: 'Use of English II' },
+  { code: 'COM215', name: 'Computer Application Packages II' },
+  { code: 'GNS206', name: 'Introduction to Psychometric Study I' },
+  { code: 'SLT212', name: 'Seminar' },
+  { code: 'SLT211', name: 'Research Methodology' },
+  { code: 'SLT213', name: 'SIWES' }
+];
+
+// ── QUERY SUPABASE DATABASE TABLE ──
+async function queryTable(tableName, semester) {
+  try {
+    // Fetch ALL rows for this table then filter by semester client-side
+    // This avoids any URL encoding issues with the semester filter
+    var url = SUPA_URL + '/rest/v1/' + tableName
+      + '?select=id,code,url,file_name,course,semester&limit=500';
+    var res = await fetch(url, {
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Accept': 'application/json'
+      }
+    });
+    if (!res.ok) {
+      var errText = await res.text();
+      console.error('Supabase error ' + res.status + ':', errText);
+      return [];
+    }
+    var data = await res.json();
+    if (!Array.isArray(data)) return [];
+    // Filter by semester client-side (case-insensitive)
+    return data.filter(function(r) {
+      return r.semester && r.semester.toLowerCase() === semester.toLowerCase();
+    });
+  } catch(e) {
+    console.error('queryTable error:', e);
+    return [];
+  }
+}
+
+
+// ── NORMALIZE TEXT FOR LOOSE MATCHING ──
+function normText(s) {
+  return (s || '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function rowMatchesCourse(r, c) {
+  if (r.code && c.code && r.code.toUpperCase() === c.code.toUpperCase()) return true;
+  if (r.course && c.name && normText(r.course) === normText(c.name)) return true;
+  return false;
+}
+
+// ── BUILD COURSE CARD GRID FROM DATABASE ──
+async function buildGrid(containerId, courses, tableName, semester) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+
+  var rows = await queryTable(tableName, semester);
+
+  var html = '';
+  courses.forEach(function(c) {
+    // Support multiple files per course — match by code OR by course name
+    var courseRows = rows.filter(function(r) { return rowMatchesCourse(r, c); });
+    var hasFile = courseRows.length > 0;
+
+    html += '<div class="course-card">';
+    html += '<div class="course-card-top">';
+    html += '<span class="course-code">' + c.code + '</span>';
+    html += hasFile
+      ? '<span class="course-status-badge status-available">✓ Available</span>'
+      : '<span class="course-status-badge status-soon">Coming Soon</span>';
+    html += '</div>';
+    html += '<div class="course-name">' + c.name + '</div>';
+    if (hasFile) {
+      courseRows.forEach(function(r, idx) {
+        var fUrl = r.url; var fName = r.file_name || c.code + '_Notes_' + (idx+1) + '.pdf';
+        var label = courseRows.length > 1 ? ' ' + (idx+1) : '';
+        html += '<div class="course-actions" style="margin-top:' + (idx>0?'6px':'0') + '">';
+        html += '<button class="btn-view" onclick="openPdfModal(\'' + fUrl + '\',\''+c.name+label+'\',\''+fName+'\')"  >👁 View' + label + '</button>';
+        html += '<a class="btn-download" href="' + fUrl + '" download="' + fName + '">⬇ Download' + label + '</a>';
+        html += '</div>';
+      });
+    } else {
+      html += '<div class="course-actions"><span class="btn-coming">📂 Not Yet Uploaded</span></div>';
+    }
+    html += '</div>';
+  });
+
+  container.innerHTML = html || '<p style="color:var(--white-dim);font-size:0.85rem;padding:20px 0">No notes uploaded yet.</p>';
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  // ── NAV TOGGLE ──
+  var hamburger = document.querySelector('.hamburger');
+  var sideNav   = document.querySelector('.side-nav');
+  var overlay   = document.querySelector('.nav-overlay');
+  var closeBtn  = document.querySelector('.nav-close');
+
+  function openNav()  { sideNav.classList.add('open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeNav() { sideNav.classList.remove('open'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+  hamburger && hamburger.addEventListener('click', openNav);
+  closeBtn  && closeBtn.addEventListener('click', closeNav);
+  overlay   && overlay.addEventListener('click', closeNav);
+
+  document.querySelectorAll('.nav-link[data-sub]').forEach(function(link) {
+    link.addEventListener('click', function() {
+      var sub = document.getElementById(link.dataset.sub);
+      if (!sub) return;
+      sub.classList.toggle('open');
+      link.classList.toggle('expanded');
+    });
+  });
+
+  // ── LEVEL TABS (ND1 / ND2) ──
+  document.querySelectorAll('.level-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var lv = btn.dataset.level;
+      document.querySelectorAll('.level-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.level-panel').forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      var panel = document.querySelector('.level-panel[data-level="' + lv + '"]');
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // ── SEMESTER TABS ──
+  document.querySelectorAll('.sem-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var semId = btn.dataset.sem;
+      var parentPanel = btn.closest('.level-panel');
+      parentPanel.querySelectorAll('.sem-btn').forEach(function(b) { b.classList.remove('active'); });
+      parentPanel.querySelectorAll('.sem-panel').forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      var target = parentPanel.querySelector('.sem-panel[data-sem="' + semId + '"]');
+      if (target) target.classList.add('active');
+    });
+  });
+
+  // ── URL PARAMS ──
+  var params = new URLSearchParams(location.search);
+  var level  = params.get('level') || 'nd1';
+
+  document.querySelectorAll('.level-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.level === level); });
+  document.querySelectorAll('.level-panel').forEach(function(p) { p.classList.toggle('active', p.dataset.level === level); });
+
+  // ── LOAD ALL GRIDS FROM DATABASE ──
+  buildGrid('nd1-s1-grid', ND1_COURSES.s1, 'nd1_notes', 'first');
+  buildGrid('nd1-s2-grid', ND1_COURSES.s2, 'nd1_notes', 'second');
+  buildGrid('nd2-s1-grid', ND2_S1_COURSES, 'nd2_notes', 'first');
+  buildGrid('nd2-s2-grid', ND2_S2_COURSES, 'nd2_notes', 'second');
+
+});
+</script>
+<script src="../ad-player.js"></script>
+
+<!-- PDF VIEWER MODAL -->
+<div id="pdf-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:9999;flex-direction:column;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#1a1a1a;border-bottom:1px solid #333;">
+    <span id="pdf-modal-title" style="color:#fff;font-size:0.9rem;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:12px;"></span>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <a id="pdf-modal-download" href="#" download style="background:#333;color:#fff;padding:6px 12px;border-radius:6px;font-size:0.8rem;text-decoration:none;">⬇ Download</a>
+      <button onclick="closePdfModal()" style="background:#ff4444;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:0.8rem;cursor:pointer;">✕ Close</button>
+    </div>
+  </div>
+  <iframe id="pdf-modal-frame" src="" style="flex:1;width:100%;border:none;background:#fff;"></iframe>
+</div>
+
+<script>
+function openPdfModal(url, title, fileName) {
+  var modal = document.getElementById('pdf-modal');
+  modal.style.display = 'flex';
+  var viewerUrl = 'https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(url);
+  document.getElementById('pdf-modal-frame').src = viewerUrl;
+  document.getElementById('pdf-modal-title').textContent = title || 'Note Viewer';
+  var dl = document.getElementById('pdf-modal-download');
+  dl.href = url; dl.download = fileName || 'note.pdf';
+  document.body.style.overflow = 'hidden';
+}
+function closePdfModal() {
+  document.getElementById('pdf-modal').style.display = 'none';
+  document.getElementById('pdf-modal-frame').src = '';
+  document.body.style.overflow = '';
+}
+</script>
+</body>
+</html>
